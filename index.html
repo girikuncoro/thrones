@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- Load the d3 library. -->
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<style>
+body { font-family: "Open Sans"; }
+svg { border: solid black 1px; }
+.bar rect { fill: #ccc; }
+.axis path { fill: none; stroke: black;}
+.axis line { stroke: black; }
+.axis text { font-size: x-small; }
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+</style>
+</head>
+<body>
+<script>
+
+var diameter = 960,
+	radius = diameter / 2,
+	innerRadius = radius - 120;
+
+var cluster = d3.layout.cluster()
+	.size([360, innerRadius])
+	.sort(null)
+	.value(function(d) { return d.size; });
+
+var bundle = d3.layout.bundle();
+
+var line = d3.svg.line.radial()
+	.interpolate("bundle")
+	.tension(.85)
+	.radius(function(d) { return d.y; })
+	.angle(function(d) { return d.x / 180 * Math.PI; })
+
+var svg = d3.select("body").append("svg")
+	.attr("width", diameter)
+	.attr("height", diameter)
+  .append("g")
+  	.attr("transform", "translate(" + radius + "," + radius + ")");
+
+ var link = svg.append("g").selectAll(".link"),
+ 	 node = svg.append("g").selectAll(".node");
+
+
+var thronesData, thrones;
+
+d3.csv("data/thrones_cleaned.csv", function (error, rows) {
+	thronesData = rows;
+	thrones = thronesData.map(function (character) {
+		return {
+			name: character.Name,
+			status: character.Status,
+			death: character.Death,
+			allegiance: character.Allegiance.split(","),
+			season: character.Season.split(",")
+		};
+	});
+	var nodes = cluster.nodes(thrones);
+	console.log(nodes);
+});
+
+
+
+</script>
+
+</body>
+</html>

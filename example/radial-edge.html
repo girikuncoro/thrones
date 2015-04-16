@@ -81,6 +81,8 @@ d3.json("readme-flare-imports.json", function(error, classes) {
   var nodes = cluster.nodes(packageHierarchy(classes)),
       links = packageImports(nodes);
 
+  console.log(nodes);
+
   link = link
       .data(bundle(links))
     .enter().append("path")

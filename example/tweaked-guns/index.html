@@ -1,0 +1,148 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>video games</title>
+	
+	<link rel="stylesheet" type="text/css" href="http://pasteup.guim.co.uk/0.0.3/css/pasteup.min.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	
+	<script src="http://pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min.js"></script>
+	<script src="js/tabletop.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="js/jquery.tmpl.min.js"></script>
+	<script id="gameTemplate" type="text/x-jquery-tmpl"> 
+		<div id='node-name'>${name}</div>
+		<div class='node-topic' id='node-game-sales'>	
+			<div class='node-label'>Units sold</div>
+			<div class='node-data-color' style='background-color: ${color};'></div>
+			<div class='node-data-short'>${sales}</div>
+		</div>
+		<div class='node-topic' id='node-game-rating'>	
+			<div class='node-label'>Rating</div>
+			<div class='node-data'>${rating}</div>
+		</div>
+		<div class='node-topic' id='node-weapon-references'>	
+			<div class='node-label'>Weapons</div>
+			<div class='node-data'></div>
+		</div>
+		<div class='node-topic' id='node-topic-references'>	
+			<div class='node-label'>Content</div>
+			<div class='node-data'>${content}</div>
+		</div>
+	</script>
+	
+	<script id="gameTemplateOld" type="text/x-jquery-tmpl"> 
+		<div id='node-name'>${name}</div>
+		<div class='node-topic' id='node-game-sales'>	
+			<div class='node-label'>Est. Units sold</div>
+			<div class='node-data-short'>${sales}</div>
+			<div class='node-data-color' style='background-color: ${color};'></div>
+		</div>
+		<div class='node-topic' id='node-weapon-references'>	
+			<div class='node-label'>Total weapons</div>
+			<div class='node-data'>${weaponCount}</div>
+		</div>
+		<div class='node-topic' id='node-topic-references'>	
+			<div class='node-label'>Total content descripters</div>
+			<div class='node-data'>${topicCount}</div>
+		</div>
+	</script>
+	
+	
+	
+	<script id="weaponTopicTemplate" type="text/x-jquery-tmpl"> 
+		<div class='node-topic-tags' id='node-tags'>	
+			<div class='node-data-color' style='background-color: ${color};'></div>
+			<div class='node-data-wide'>${count} content that includes ${name}</div>
+		</div>
+	</script>
+	
+	<script id="weaponTemplate" type="text/x-jquery-tmpl"> 
+		<div class='node-topic-tags' id='node-tags'>	
+			<div class='node-data-color' style='background-color: ${color};'></div>
+			<div class='node-data-wide'>${count} games use ${name}</div>
+		</div>
+	</script>
+	
+	<script id="listTemplate" type="text/x-jquery-tmpl"> 
+		<div class='node-list-item'>${item}</div>	
+	</script>
+	
+		
+</head>
+<body>
+
+<div class='wrap'>	
+	<div class='row' id='circle-chart-container'>
+
+		<div class='col-12' id='game-network'></div>
+		<div class='chart-detail' style='right: 0px; top: 650px; width: 100px; text-align: left;'>
+			<p>Six of the top 50 games, which are sports themed, do not have content warnings.</p>
+		</div>
+		<div id='anchored-charts'>
+			<div class='anchored-chart' id='chart-violence'>
+				<div class='option-text'>Violent content</div>
+				
+			
+				<p class='detail-text' > Though two in three games carry a violent content label, just over half are considered violent if "cartoon violence" is excluded.</p>
+				<div class='callout-chart' id='chart-game-violence'></div>
+				<div class='gia-button' id='btn-violence'>Show violent games</div>			
+			</div>
+		
+		
+			<div class='anchored-chart' id='chart-game-guns'>
+			
+				<div class='option-text'>Realistic firearms</div>
+			
+				<p class='detail-text' >Realistic weaponry from machine guns to handguns were found in less than half of 2012's top 50 games.</p>
+				<div class='callout-chart' id='chart-game-weapons'></div>
+				
+				<div class='gia-button' id='btn-guns'>Show games with guns</div>
+			
+			</div>
+		
+		
+			<div class='anchored-chart' id='chart-game-audience'>
+			
+				<div class='option-text' style='text-align:left; width: 200px;'>The suggested audience</div>
+				<p class='detail-text' >Games are rated by an independent rating board, <a href='http://www.esrb.org/ratings/ratings_guide.jsp' target='_blank'>ESRB</a>.</p>
+				<div class='callout-chart-large' id='chart-game-ratings'></div>
+				
+				<div class='gia-button' id='btn-audience'  style='float:left;'>Show adult games</div>
+			</div>
+		
+			<div class='chart-detail' style='left: 235px; top: 55px; width: 120px; text-align: left;'>
+				<p>Games with fitness and sports themes often carry content warnings because of the music.</p>
+			</div>
+		
+			
+		</div>
+	</div>
+	
+	
+	
+	<div class='row'>
+		<div class='col-12'>
+			<div id='source'>Sources: VGChartz, Entertainment Ratings Safety Board<br>Note: Game sale estimates include all platforms available; Ratings may vary slightly by platform.</div>
+		</div>
+	</div>
+	
+</div>
+
+	
+
+
+
+
+
+		
+<div id='node-info' class='gia-popup'></div>
+	
+	
+	<script src="js/main.js"></script>
+</body>
+</html>
