@@ -47,16 +47,10 @@ var line = d3.svg.line.radial()
     .radius(function(d) { return d.y; })
     .angle(function(d) { return d.x / 180 * Math.PI; });
 
-
-
-$(document).ready(function () {
-	
-	//Tabletop.init( { key: '0ArF9tD_naD7edHIyOEE3endKbzZmZExTdWVoT0xTTmc', callback: processData, simpleSheet: true } )
-	//Tabletop.init( { key: 'https://docs.google.com/spreadsheets/d/1peMpgsHGZMP40LZUcOaGI99H0sQj1zks4IZB7Jd0MKU', callback: processData, simpleSheet: true } )
-	//console.log(Tabletop.init( { key: '0ArF9tD_naD7edHIyOEE3endKbzZmZExTdWVoT0xTTmc', callback: processData, simpleSheet: true } ));
-	//Tabletop.init( { key: 'https://docs.google.com/spreadsheets/d/1RQdUqXtOq4pifBO-uAqfImgpXg4zrzRLsduGUn16ViE', callback: showInfo, simpleSheet: true, debug: true } );
-	Tabletop.init( { key: '1RQdUqXtOq4pifBO-uAqfImgpXg4zrzRLsduGUn16ViE', callback: showInfo, simpleSheet: true, debug: true } );
-})
+d3.csv("games-data.csv", function (error, rows) {
+	data = rows;
+	processData(data);
+});
 
 var maxGamesToWeapons = 0,
 	maxWeaponsToGames = 0,
