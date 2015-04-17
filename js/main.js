@@ -51,11 +51,11 @@ var line = d3.svg.line.radial()
 
 $(document).ready(function () {
 	
-	//Tabletop.init( { key: '0ArF9tD_naD7edHIyOEE3endKbzZmZExTdWVoT0xTTmc', callback: processData, simpleSheet: true } )
+	Tabletop.init( { key: '0ArF9tD_naD7edHIyOEE3endKbzZmZExTdWVoT0xTTmc', callback: processData, simpleSheet: true } )
 	//Tabletop.init( { key: 'https://docs.google.com/spreadsheets/d/1peMpgsHGZMP40LZUcOaGI99H0sQj1zks4IZB7Jd0MKU', callback: processData, simpleSheet: true } )
 	//console.log(Tabletop.init( { key: '0ArF9tD_naD7edHIyOEE3endKbzZmZExTdWVoT0xTTmc', callback: processData, simpleSheet: true } ));
 	//Tabletop.init( { key: 'https://docs.google.com/spreadsheets/d/1RQdUqXtOq4pifBO-uAqfImgpXg4zrzRLsduGUn16ViE', callback: showInfo, simpleSheet: true, debug: true } );
-	Tabletop.init( { key: '1RQdUqXtOq4pifBO-uAqfImgpXg4zrzRLsduGUn16ViE', callback: showInfo, simpleSheet: true, debug: true } );
+	//Tabletop.init( { key: '1RQdUqXtOq4pifBO-uAqfImgpXg4zrzRLsduGUn16ViE', callback: showInfo, simpleSheet: true, debug: true } );
 })
 
 var maxGamesToWeapons = 0,
@@ -276,6 +276,7 @@ function processData(data){
 		
 		
 	}
+	console.log(games);
 
 	for(var g in games){
 		gameRootNode.children.push(games[g])

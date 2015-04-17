@@ -4,16 +4,14 @@ var map = {
 };
 
 var gwlinks = [],
+	wtlinks = [],
 	gtlinks = [];
-
-var cslinks = [], // chars to seasons
-	chlinks = [], // chars to houses
-	cdlinks = []; // chars to death
 
 var diameter = 640,
     radius = 940 / 2,
     innerRadius = radius - 270,
 	circlew = 940;
+
 
 var cluster = d3.layout.cluster()
     .size([360, innerRadius])
@@ -25,7 +23,7 @@ var cluster = d3.layout.cluster()
 		var charA = a.name.toLowerCase().charCodeAt(0)
 		var charB = b.name.toLowerCase().charCodeAt(0)
 		
-		if(a.nodeType == 'character'){
+		if(a.nodeType == 'game'){
 			return d3.descending(valueA, valueB);
 		} else {
 			return d3.descending(valueB - charB, valueA - charA); 
@@ -49,6 +47,16 @@ var line = d3.svg.line.radial()
     .radius(function(d) { return d.y; })
     .angle(function(d) { return d.x / 180 * Math.PI; });
 
+
+//var dataSource = 'data/games-data.csv';
+var dataSource = 'data/test-games.csv';
+
+d3.csv(dataSource, function (error, rows) {
+	data = rows;
+	//processData(data);
+	processThrones(data);
+});
+
 var maxGamesToWeapons = 0,
 	maxWeaponsToGames = 0,
 	maxGamesToTopics = 0,
@@ -56,7 +64,7 @@ var maxGamesToWeapons = 0,
 	maxGameWeapons = 0,
 	maxGameSales = 0, 
 	minGameSales = undefined,
-	totalGames = 37; // it was 50
+	totalGames = 37;
 var gradientCounter = 0,
 	gameRatings = {},
 	gameRatingTypes = {}
@@ -66,279 +74,7 @@ var gradientCounter = 0,
 	gamesWithGuns = [],
 	gamesWithoutGuns = []
 
-// Thrones declaration
-var maxCharToSeasons = 0,
-	maxSeasonToChars = 0,
-	maxCharToHouses = 0,
-	maxHouseToChars = 0,
-	totalChars = 37;
-
-var dataSource = 'data/games-data.csv';
-//var dataSource = 'data/thrones_cleaned.csv';
-//var dataSource = 'data/test-games.csv';
-
-d3.csv(dataSource, function (error, rows) {
-	data = rows;
-	processData(data);
-	//processThrones(data);
-});
-
-function processThrones(data) {
-
-	var charRootNode = {
-		name: 'thrones',
-		children: []
-	}
-	var seasonRootNode = {
-		name: 'thrones',
-		children: []
-	}
-	var houseRootNode = {
-		name: 'thrones',
-		children: []
-	}
-	var deathRootNode = {
-		name: 'thrones',
-		children: []
-	}
-
-	var chars = {},
-		seasons = {},
-		deaths = {},
-		houses = {},
-		charNodes = [],
-		seasonNodes = [],
-		deathNodes = [],
-		houseNodes = []
-
-	for (var d = 0; d < totalChars; d++) {
-		chars[ data[d]['Name'] ] = {
-			name: data[d]['Name'],
-			className: getClassName(data[d]['Name']),
-			children: [],
-			numSeasons: 0,
-			seasons: [],
-			houses: [],
-			nodeType: 'character',
-			connectedNodes: [],
-			status: data[d]['Status'],
-			death: getDeath(data[d]['Death']),
-			seasonLink: ''
-		}
-
-		var seasonTags = (data[d]['Season'] != '') ? data[d]['Season'].replace(/\s+/g, '').split(','): [];
-		var houseTags = (data[d]['Allegiance'] != '') ? data[d]['Allegiance'].split(','): [];
-		
-		// adding nodes to seasons
-		if (seasonTags.length > 0) {
-			chars[ data[d]['Name'] ]['numSeasons'] = seasonTags.length;
-			
-			seasonTags.forEach(function (s){
-				s = s.replace(/\s+/g, '');
-
-				if ( !seasons[s] ) {
-					seasons[s] = {
-						name: 'season'.concat(s),
-						className: 'season'.concat(s),
-						children: [],
-						size: 0,
-						numChars: 0,
-						chars: [],
-						nodeType: 'season',
-						connectedNodes: [],
-						barLinks: {}
-					}	
-				}
-				
-				cslinks.push({
-					type: 'char-season-link',
-					source: chars[ data[d]['Name'] ],
-					target: seasons[s]
-				});
-
-				seasons[s]['size'] ++;
-				seasons[s]['numChars'] ++;
-
-				seasons[s]['connectedNodes'].push(chars[ data[d]['Name'] ]['className']);
-				seasons[s]['chars'].push(chars[ data[d]['Name'] ]['name']);
-				chars[ data[d]['Name'] ]['connectedNodes'].push(seasons[s]['className']);
-				chars[ data[d]['Name'] ]['seasons'].push(seasons[s]['name']);
-
-			});
-		}
-
-		// adding nodes to houses
-
-		// adding nodes to death
-	}
-	//console.log(chars);
-	for (var c in chars){
-		console.log(c);
-		charRootNode.children.push(chars[c]);
-		if (chars[c]['numSeasons'] > maxCharToSeasons) {
-			maxCharToSeasons = chars[c]['numSeasons'];
-		}
-	}
-
-	maxCharSeasons = maxCharToSeasons;
-	if (maxSeasonToChars > maxCharToSeasons) {
-		maxCharSeasons = maxSeasonToChars;
-	}
-
-	map.children.push(charRootNode);
-	map.children.push(seasonRootNode);
-	map.children.push(houseRootNode);
-	//console.log(map);
-
-	drawChartThrones();
-}
-
-function drawChartThrones(){
-	
-	var barScale = d3.scale.linear()
-	    .domain([0,20])
-	    .range([0,50]);
-
-	var gameBarScale = d3.scale.linear()
-	   	.domain([0,maxGameSales])
-	   	.range([0,50]);
-	
-	
-	var nodes = cluster.nodes(map)
-
-	svg.selectAll(".node-dot")
-      .data(nodes.filter(function(n) { return n.depth == 2; }))
-    .enter().append("g")
-      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-    .append("rect")
-	  .attr('class', function(d){
-		return 'node-dot ' + 'nodedot-' + d.className 
-	})
-	  .attr('y', -5)
-      .attr('height', 12)
-      .attr('width', function(d){
-		if(d.nodeType == 'game'){
-			return gameBarScale(d.size)
-		} else {
-			return barScale(d.size)
-		}
-		
-		 
-	})
-	
-      //.attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
-	  .style('fill', function(d){
-		 	return getColor(d.nodeType, d.size)
-   	   })
-	  .on("mouseover", showConnections)
-      .on("mouseout", hideConnections)
-	
-	svg.selectAll(".node")
-      .data(nodes.filter(function(n) { return n.depth == 2; }))
-    .enter().append("g")
-	  .attr("class", 'node')
-      .attr("transform", function(d) { 
-	
-		var translatevalue = d.y + 5
-		if(d.nodeType == 'game'){
-			translatevalue += gameBarScale(d.size)
-		} else {
-			translatevalue += barScale(d.size)
-		}
-		
-	
-		return "rotate(" + (d.x - 90) + ")translate(" + translatevalue + ")"; })
-    .append("text")
-      .attr("dx", function(d) { return d.x < 180 ? 0 : 0; })
-      .attr("dy", "5")
-      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-      .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
-      .text(function(d) { return d.name; })
-      .attr("id", function(d){
-			return 'nodetext-' + d.className
-	   })
-	  .attr("class", function(d){
-			var bClass ="circle-text"
-			
-			if(d.nodeType == 'game'){
-				bClass += ' btext-' + d.weaponLink + ' btext-' + d.violenceLink + ' btext-' + d.ratingLink
-			} else if(d.nodeType == 'weapon'){
-				bClass += ' btext-' + d.weaponLink 
-			} else {
-				bClass += ' btext-' + d.violenceLink 
-			}	
-
-			return bClass;
-      })
-	  .style('fill', function(d){
-	  			if(d.nodeType == 'game'){
-					return '#394B9F'
-				} else if(d.nodeType == 'weapon' ) {
-					return '#CC2F27'
-				} else if( d.nodeType == 'topic'){
-					return '#3C602E'
-				}
-	
-	  	   })
-      .on("mouseover", showConnections)
-      .on("mouseout", hideConnections)
-
-	$('.node').mousemove(setPopupPosition);
-	$('.node-dot').mousemove(setPopupPosition);
-
-	gameWeaponsColor = d3.interpolateRgb("#ccc", '#2C3878');
-
-
-	gameWeaponsScale = d3.scale.linear()
-	    				.domain([0,maxGameWeapons])
-	    				.range([0,1]);
-	
-	
-	gameTopicsColor = d3.interpolateRgb("#ccc", '#3C602E');
-
-
-	gameTopicsScale = d3.scale.linear()
-	    				.domain([0,maxGameTopics])
-	    				.range([0,1]);
-		
-	var mergedLinks = gwlinks.concat(gtlinks)
-	
-	svg.selectAll(".links")
-		.data(bundle(mergedLinks))
-	.enter().append("path")
-		.attr("class", function(d){
-			var linkClass = 'links link-' + d[4]['className'] + ' link-' + d[0]['className']
-			var node = (d[4]['nodeType'] == 'game')? d[4] : d[0];
-			
-			var gLink = (d[4]['nodeType'] == 'game')? d[4] : d[0];
-			var oLink = (d[4]['nodeType'] == 'game')? d[0] : d[4];
-			
-			linkClass += ' barlink-' + gLink['className'] + oLink['className']
-
-			linkClass += ' barlink-' + node['gameRating']
-			
-		
-			
-			return linkClass
-		})
-		.attr("id", function(d){
-			return 'link-' + d[4]['className'] + '-' + d[0]['className']
-		})
-		.attr("d", line)
-		.style("stroke", function(d){
-			var gradient;
-			if(d[4]['nodeType'] == 'topic' && d[0]['nodeType'] == 'game' ){
-				return 'url(#' + getGradient(d[4]['numGames'], d[0]['size'], 'topic', 'game') +')'
-			} else if(d[4]['nodeType'] == 'weapon' && d[0]['nodeType'] == 'game'){
-				return 'url(#' + getGradient(d[4]['numGames'], d[0]['size'], 'weapon', 'game') +')'
-			}
-			
-			return'url(#' + gradient +')'
-		});
-		
-}
-
-function processData(data){
+function processThrones(data){
 
 	var gameRootNode = {
 		name: 'games',
@@ -359,6 +95,7 @@ function processData(data){
 		gameNodes = [],
 		weaponNodes = [],
 		topicNodes = []
+	
 
 	for(var d = 0; d < totalGames; d++){
 
@@ -366,7 +103,7 @@ function processData(data){
 			name: data[d]['name'],
 			className: getClassName(data[d]['name']),
 			children: [],
-			size: Number(data[d]['sales']),
+			size: 1,
 			numWeapons: 0,
 			weapons: [],
 			topics: [],
@@ -379,7 +116,8 @@ function processData(data){
 			ratingLink: data[d]['rating'],
 			weaponConnections:{'guns': [], 'noguns': []},
 			topicConnections: {'violence': [], 'noviolence': []}
-		}		
+		}
+		
 		
 		if(gameRatings.hasOwnProperty(data[d]['rating'])){
 			gameRatings[data[d]['rating']]['total'] ++
@@ -405,7 +143,321 @@ function processData(data){
 		
 		var weaponTags = ( data[d]['weapons'] != '') ? data[d]['weapons'].split(', '): [];
 		var contentTags = ( data[d]['contentdescripters'] != '' ) ? data[d]['contentdescripters'].split(', '): [];	
+		
+		
+		if( weaponTags.length > 0){
+			var includeGameWeapon = false
+			games[ data[d]['name'] ]['numWeapons'] = weaponTags.length;
+			weaponTags.forEach(function(w){
+
+				if( !weapons[ w ] ){
+					weapons[w] = {
+						name: w,
+						className: getClassName(w),
+						children: [],
+						size: 0,
+						numGames: 0,
+						games: [],
+						nodeType: 'weapon',
+						connectedNodes: [],
+						barLinks : {},
+						weaponLink: ''						
+					}
+				}
+
+				gwlinks.push({
+					type: 'game-weapon-link',
+					source: games[ data[d]['name'] ],
+					target: weapons[w]
+				})
+				weapons[w]['size'] ++;
+				weapons[w]['numGames'] ++;
+				
+				weapons[w]['connectedNodes'].push(games[ data[d]['name'] ]['className']);
+				weapons[w]['games'].push(games[ data[d]['name'] ]['name']);
+				games[ data[d]['name'] ]['connectedNodes'].push(weapons[w]['className']);
+				games[ data[d]['name'] ]['weapons'].push(weapons[w]['name']);
+				
+				if(w!= 'axe' && w!= 'dagger or tomahawk' && w!= 'hammer' && w!= 'sword' && w!= 'short blade'  && w!= 'bow and arrow'  && w!= 'grenade or explosive'  && w!= 'launcher' ){
+					includeGameWeapon = true
+					weapons[w]['weaponLink'] = weapons[w]['barLinks']['guns'] = 'guns'
+					games[ data[d]['name'] ]['weaponConnections']['guns'].push(weapons[w])
+				} else {
+					weapons[w]['weaponLink'] = weapons[w]['barLinks']['noguns'] = 'noguns'
+					games[ data[d]['name'] ]['weaponConnections']['noguns'].push(weapons[w])
+				}
+				
+				
+			})
+	
+			if(includeGameWeapon){
+				gamesWithGuns.push(games[ data[d]['name'] ])
+				games[ data[d]['name'] ]['weaponLink'] = 'guns'
+	
+			} else {
+				gamesWithoutGuns.push(games[ data[d]['name'] ])
+				games[ data[d]['name'] ]['weaponLink']  = 'noguns'
+			}
 			
+			
+			
+		} else {
+			gamesWithoutGuns.push(games[ data[d]['name'] ])
+			games[ data[d]['name'] ]['weaponLink']  = 'noguns'
+		}
+		
+		if( contentTags.length > 0){
+			var includeGameContent = false
+			
+			games[ data[d]['name'] ]['numTopics'] = weaponTags.length;
+			contentTags.forEach(function(t){
+				
+				if( !topics[ t ] ){
+					topics[t] = {
+						name: t,
+						className: getClassName(t),
+						children: [],
+						size: 0,
+						numGames: 0,
+						games: [],
+						nodeType: 'topic',
+						connectedNodes: [],
+						barLinks: {},
+						violenceLink: ''
+					}
+				}
+
+				gtlinks.push({
+					type: 'game-topic-link',
+					source: games[ data[d]['name'] ],
+					target: topics[t]
+				})
+				topics[t]['size'] ++;
+				topics[t]['numGames'] ++;
+				
+				topics[t]['connectedNodes'].push(games[ data[d]['name'] ]['className']);
+				topics[t]['games'].push(games[ data[d]['name'] ]['name']);
+				games[ data[d]['name'] ]['connectedNodes'].push(topics[t]['className']);		
+				games[ data[d]['name'] ]['topics'].push(topics[t]['name']);
+				
+				if(t == 'Intense Violence' || t == 'Blood and Gore' || t == 'Violence' || t == 'Blood' || t == 'Cartoon Violence'  ){
+					includeGameContent = true;
+					topics[t]['violenceLink'] = topics[t]['barLinks']['violence'] = 'violence'
+					games[ data[d]['name'] ]['topicConnections']['violence'].push(topics[t])
+				} else {
+					topics[t]['violenceLink'] = topics[t]['barLinks']['violence'] = 'noviolence'
+					games[ data[d]['name'] ]['topicConnections']['noviolence'].push(topics[t])
+				}
+				
+			})
+			if(includeGameContent){
+				gamesWithViolence.push(games[ data[d]['name'] ])
+				games[ data[d]['name'] ]['violenceLink'] = 'violence'
+				
+			} else {
+				gamesWithoutViolence.push(games[ data[d]['name'] ])
+				games[ data[d]['name'] ]['violenceLink'] = 'noviolence'
+			}
+			
+		} else {
+			games[ data[d]['name'] ]['violenceLink'] = 'noviolence'
+		}
+
+		
+		
+	}
+
+	for(var g in games){
+		gameRootNode.children.push(games[g])
+		if(games[g]['numTopics'] > maxGamesToTopics){
+			maxGamesToTopics = games[g]['numTopics'];
+		}
+		if(games[g]['numWeapons'] > maxGamesToWeapons){
+			maxGamesToWeapons = games[g]['numWeapons'];
+		}
+		
+	}
+	for(var w in weapons){
+		weaponRootNode.children.push(weapons[w])
+		if(weapons[w]['numGames'] > maxWeaponsToGames){
+			maxWeaponsToGames = weapons[w]['numGames'];
+		}
+	}
+	for(var t in topics){
+		contentRootNode.children.push(topics[t])
+		if(topics[t]['numGames'] > maxTopicsToGames){
+			maxTopicsToGames = topics[t]['numGames'];
+		}
+	}
+	
+	maxGameWeapons = maxGamesToWeapons
+	if( maxWeaponsToGames > maxGamesToWeapons){
+		maxGameWeapons = maxWeaponsToGames;
+	}
+	maxGameTopics = maxGamesToTopics
+	if( maxTopicsToGames > maxGameTopics){
+		maxGameTopics = maxTopicsToGames;
+	}
+		
+	map.children.push(gameRootNode)
+	map.children.push(weaponRootNode)
+	map.children.push(contentRootNode)
+	
+	drawChart();
+	
+	var ratingArray = []
+	for(var k in gameRatings){
+		gameRatings[k].contentType = 'rating'
+		//ratingArray.push(gameRatings[k])
+	}
+	
+	ratingArray[0] = gameRatings ['m']
+	ratingArray[1] = gameRatings ['t']
+	ratingArray[2] = gameRatings ['e10']
+	ratingArray[3] = gameRatings ['e']
+	
+	
+	drawSmallChart('chart-game-ratings', ratingArray, 'left', 120);
+	
+	var gameGunsArray = [
+		{
+			name: 'Guns',
+			total: gamesWithGuns.length,
+			contentType: 'guns',
+			data: gamesWithGuns
+		},
+		{
+			name: 'No guns',
+			total: totalGames - gamesWithGuns.length,
+			contentType: 'guns',
+			data: gamesWithoutGuns
+		},
+	
+	]
+	drawSmallChart('chart-game-weapons', gameGunsArray, 'left', 60);
+	
+	var gameViolenceArray = [
+		{
+			name: 'Violence',
+			total: gamesWithViolence.length,
+			contentType: 'violence',
+			data: gamesWithViolence
+		},
+		{
+			name: 'No violence',
+			total: totalGames - gamesWithViolence.length,
+			contentType: 'violence',
+			data: gamesWithoutViolence
+		},
+	
+	]
+	drawSmallChart('chart-game-violence', gameViolenceArray, 'left', 60);
+
+	$('.gia-button').click(function(e){
+		
+		
+
+		if($(this).hasClass('gia-button-selected') == false){	
+			currentSelectionText = $(this).text();
+			$(this).text('Show all games')	
+			currentSelectionBtn = this;
+						
+			if($(this).attr('id') == 'btn-guns'){
+				showBarConnections( gameGunsArray['0'])
+			} else if($(this).attr('id') == 'btn-violence'){
+				showBarConnections( gameViolenceArray['0'])
+			} else if($(this).attr('id') == 'btn-audience'){
+				showBarConnections( ratingArray[0])
+			}
+			
+			
+			
+		} else {
+			hideBarConnections(currentSelection )
+		}
+		
+		
+		
+	})
+
+
+	
+}
+
+function processData(data){
+
+	var gameRootNode = {
+		name: 'games',
+		children: []
+	}
+	var weaponRootNode = {
+		name: 'games',
+		children: []
+	}
+	var contentRootNode = {
+		name: 'games',
+		children: []
+	}
+
+	var games = {},
+		weapons = {},
+		topics = {},
+		gameNodes = [],
+		weaponNodes = [],
+		topicNodes = []
+	
+
+	for(var d = 0; d < totalGames; d++){
+
+		games[ data[d]['name'] ] = {
+			name: data[d]['name'],
+			className: getClassName(data[d]['name']),
+			children: [],
+			size: Number(data[d]['sales']),
+			numWeapons: 0,
+			weapons: [],
+			topics: [],
+			numTopics: 0,
+			nodeType: 'game',
+			connectedNodes: [],
+			gameRating: data[d]['rating'],
+			violenceLink: '',
+			weaponLink: '',
+			ratingLink: data[d]['rating'],
+			weaponConnections:{'guns': [], 'noguns': []},
+			topicConnections: {'violence': [], 'noviolence': []}
+		}
+		
+		
+		if(gameRatings.hasOwnProperty(data[d]['rating'])){
+			gameRatings[data[d]['rating']]['total'] ++
+			gameRatings[data[d]['rating']]['data'].push(games[ data[d]['name'] ])
+		} else {
+			gameRatings[data[d]['rating']] = {
+				name: data[d]['rating'],
+				total: 1,
+				data: [ games[ data[d]['name'] ] ]
+			}
+		}
+		
+		
+		
+		
+		if( minGameSales == undefined){
+			minGameSales = games[ data[d]['name'] ]['size']
+		} else if( minGameSales > games[ data[d]['name'] ]['size'] ){
+			minGameSales = games[ data[d]['name'] ]['size']
+		}
+		
+		if( games[ data[d]['name'] ]['size'] > maxGameSales ){
+			maxGameSales = games[ data[d]['name'] ]['size']
+		}
+		
+		
+		var weaponTags = ( data[d]['weapons'] != '') ? data[d]['weapons'].split(', '): [];
+		var contentTags = ( data[d]['contentdescripters'] != '' ) ? data[d]['contentdescripters'].split(', '): [];	
+		
+		
 		if( weaponTags.length > 0){
 			var includeGameWeapon = false
 			games[ data[d]['name'] ]['numWeapons'] = weaponTags.length;
@@ -827,12 +879,12 @@ function drawChart(){
 	    .domain([0,20])
 	    .range([0,50]);
 
-	var gameBarScale = d3.scale.linear()
-	    .domain([0,maxGameSales])
-	    .range([0,50]);
+		var gameBarScale = d3.scale.linear()
+		    				.domain([0,maxGameSales])
+		    				.range([0,1]);
 	
 	
-	var nodes = cluster.nodes(map);
+	var nodes = cluster.nodes(map)
 
 	svg.selectAll(".node-dot")
       .data(nodes.filter(function(n) { return n.depth == 2; }))
@@ -978,16 +1030,6 @@ function getClassName(title){
 	name = name.replace(/!/g,'')
 	name = name.replace(/:/g,'').toLowerCase()
 	return name;
-}
-
-function getDeath(death){
-	if (death.indexOf('Other') >= 0){
-		return 'Other';
-	} else if (death == ""){
-		return null;
-	} else {
-		return death;
-	}
 }
 
 function setPopupPosition(e){
@@ -1213,15 +1255,22 @@ function showConnections(d) {
 	$("#node-info").empty()
 
 	if(d.nodeType == 'game'){
-		$("#gameTemplate").tmpl( {
+		/*$("#gameTemplate").tmpl( {
 			name: d.name,
 			sales: roundSales(d.size),
 			rating: getRating(d.gameRating),
 			color: getColor(d.nodeType, d.size),
 			weaponCount: d.weapons.length,
 			topicCount: d.topics.length		
-		}).appendTo( "#node-info" );
+		}).appendTo( "#node-info" );*/
 		
+		$("#gameTemplate").tmpl( {
+			name: d.name,
+			color: getStatusColor(d.gameRating),
+			//color: getColor(d.nodeType, d.size),
+			status: d.gameRating
+		}).appendTo( "#node-info" );
+
 		var weapons = (d.weapons.length > 0)? d.weapons: ['none'];
 		$.each(weapons, function(i, w){
 			$("#listTemplate").tmpl( {item: w}).appendTo( "#node-weapon-references .node-data" );
@@ -1233,7 +1282,7 @@ function showConnections(d) {
 		})
 	} else if(d.nodeType == 'weapon' ){
 		$("#weaponTemplate").tmpl( {
-			name: (d.name == 'axe') ? 'an ' + d.name: 'a ' + d.name,
+			name: d.name,
 			color: getColor(d.nodeType, d.size),
 			count: addCommas(d.numGames)			
 		}).appendTo( "#node-info" );		
@@ -1241,7 +1290,7 @@ function showConnections(d) {
 		$("#weaponTopicTemplate").tmpl( {
 			name: (d.name.toLowerCase().search('use') >= 0)? 'the ' + d.name.toLowerCase() : d.name.toLowerCase(),
 			color: getColor(d.nodeType, d.size),
-			count: (d.numGames > 1) ? addCommas(d.numGames)	+ ' games have': addCommas(d.numGames)	+ ' game has' 	
+			count: (d.numGames > 1) ? addCommas(d.numGames)	+ ' major characters are': addCommas(d.numGames)	+ ' major character is' 	
 		}).appendTo( "#node-info" );		
 	}
 	$("#node-info").show()
@@ -1302,48 +1351,43 @@ function getGradient(startValue, endValue, topic1, topic2){
 	return gradientId;
 }
 
+function getStatusColor(status){
+	if (status == 'Alive') {
+		color = '#7EFF2B';
+	} else {
+		color = '#00302B';
+	}
+	return color;
+}
 
 function getColor(topic, value){
 	var color = '#ccc'
 	if(topic == 'game'){
-		
-		if( value <= 2000000){
-			color = '#D7DEF7'
-		} else if( value > 2000000 && value <= 4000000){
-			color = '#8B9BD9'
-		} else if( value > 4000000 && value <= 8000000){
-			color = '#5265AE'
-		} else if( value > 8000000 && value <= 16000000){
-			color = '#394B9F'
-		} else if( value > 16000000 ){
-			color = '#2C3878'
-		}
+		color = '#370CE8';
 	
 	}else if(topic == 'weapon'){
 
 		if( value <= 1){
-			color = '#FFE2DB'
+			color = '#FFE2DB';
 		} else if( value > 1 && value <= 5){
-			color = '#E88B78'
+			color = '#E88B78';
 		} else if( value > 5 && value <= 10){
-			color = '#CC2F27'
+			color = '#CC2F27';
 		} else if( value > 10 && value <= 15){
-			color = '#871D1B'
+			color = '#871D1B';
 		} else if( value > 15 ){
-			color = '#5E0202'
+			color = '#5E0202';
 		}
 	}else if(topic == 'topic'){
 		
-		if( value <= 1){
-			color = '#CEDBB4'
-		} else if( value > 1 && value <= 5){
-			color = '#9DB270'
-		} else if( value > 5 && value <= 10){
-			color = '#5E843A'
-		} else if( value > 10 && value <= 15){
-			color = '#3C602E'
-		} else if( value > 15 ){
-			color = '#1E3B13'
+		if( value <= 20){
+			color = '#CEDBB4';
+		} else if( value > 20 && value <= 25){
+			color = '#CEDBB4';
+		} else if( value > 25 && value <= 30){
+			color = '#9DB270';
+		} else if( value > 30 ){
+			color = '#5E843A';
 		}
 	}
 	return color;	
