@@ -15,6 +15,9 @@
 	<script src="js/jquery.tmpl.min.js"></script>
 	<script id="gameTemplate" type="text/x-jquery-tmpl"> 
 		<div id='node-name'>${name}</div>
+		<div>
+			<img src="http://img2.wikia.nocookie.net/__cb20150409231554/gameofthrones/images/thumb/8/8b/GOT_Season_5_03.jpg/130px-0%2C2100%2C41%2C1899-GOT_Season_5_03.jpg" alt="targaryen" height="100" width="100">
+		</div>
 		<div class='node-topic' id='node-game-sales'>	
 			<div class='node-label'>Status</div>
 			<div class='node-data-color' style='background-color: ${color};'></div>
@@ -25,15 +28,19 @@
 			<div class='node-data'></div>
 		</div>
 		<div class='node-topic' id='node-topic-references'>	
+			<div class='node-label'>Death</div>
+			<div class='node-data'></div>
+		</div>
+		<div class='node-topic' id='node-season-references'>	
 			<div class='node-label'>Appearance</div>
-			<div class='node-data'>${content}</div>
+			<div class='node-data'></div>
 		</div>
 	</script>
 	
 	<script id="weaponTopicTemplate" type="text/x-jquery-tmpl"> 
 		<div class='node-topic-tags' id='node-tags'>	
 			<div class='node-data-color' style='background-color: ${color};'></div>
-			<div class='node-data-wide'>${count} appeared in season ${name}</div>
+			<div class='node-data-wide'>${count} killed by ${name}</div>
 		</div>
 	</script>
 	
@@ -70,13 +77,13 @@
 	
 	<div class='row'>
 		<div class='col-12'>
-			<div id='source'>Sources: VGChartz, Entertainment Ratings Safety Board<br>Note: Game sale estimates include all platforms available; Ratings may vary slightly by platform.</div>
+			<div id='source'>Sources: <a href="http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki">Game of Thrones Wikia</a> scraped by Python script with <a href="http://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup</a> package.</div>
 		</div>
 	</div>
 	
 </div>
 	
 <div id='node-info' class='gia-popup'></div>	
-	<script src="js/main2.js"></script>
+	<script src="js/main3.js"></script>
 </body>
 </html>

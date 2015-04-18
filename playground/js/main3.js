@@ -110,11 +110,10 @@ function processThrones(data){
 			weapons: [],
 			topics: [],
 			numTopics: 0,
-			death: [],
-			numDeath: 0,
 			nodeType: 'game',
 			connectedNodes: [],
 			gameRating: data[d]['rating'],
+			seasons: data[d]['season'].split(','),
 			violenceLink: '',
 			weaponLink: '',
 			ratingLink: data[d]['rating'],
@@ -359,9 +358,6 @@ function processThrones(data){
 	drawSmallChart('chart-game-violence', gameViolenceArray, 'left', 60);
 
 	$('.gia-button').click(function(e){
-		
-		
-
 		if($(this).hasClass('gia-button-selected') == false){	
 			currentSelectionText = $(this).text();
 			$(this).text('Show all games')	
@@ -445,9 +441,6 @@ function processData(data){
 			}
 		}
 		
-		
-		
-		
 		if( minGameSales == undefined){
 			minGameSales = games[ data[d]['name'] ]['size']
 		} else if( minGameSales > games[ data[d]['name'] ]['size'] ){
@@ -461,7 +454,6 @@ function processData(data){
 		
 		var weaponTags = ( data[d]['weapons'] != '') ? data[d]['weapons'].split(', '): [];
 		var contentTags = ( data[d]['contentdescripters'] != '' ) ? data[d]['contentdescripters'].split(', '): [];	
-		
 		
 		if( weaponTags.length > 0){
 			var includeGameWeapon = false
@@ -881,12 +873,12 @@ function color(val){
 function drawChart(){
 	
 	var barScale = d3.scale.linear()
-	    .domain([0,20])
-	    .range([0,50]);
+	    .domain([0,10])
+	    .range([0,20]);
 
-		var gameBarScale = d3.scale.linear()
-		    				.domain([0,maxGameSales])
-		    				.range([0,1]);
+	var gameBarScale = d3.scale.linear()
+	    .domain([0,maxGameSales])
+	    .range([0,1]);
 	
 	
 	var nodes = cluster.nodes(map)
@@ -1001,8 +993,6 @@ function drawChart(){
 			linkClass += ' barlink-' + gLink['className'] + oLink['className']
 
 			linkClass += ' barlink-' + node['gameRating']
-			
-		
 			
 			return linkClass
 		})
@@ -1274,7 +1264,8 @@ function showConnections(d) {
 			name: d.name,
 			color: getStatusColor(d.gameRating),
 			//color: getColor(d.nodeType, d.size),
-			status: d.gameRating
+			status: d.gameRating,
+			season: d.seasons
 		}).appendTo( "#node-info" );
 
 		var weapons = (d.weapons.length > 0)? d.weapons: ['none'];
@@ -1286,6 +1277,11 @@ function showConnections(d) {
 		$.each(topics, function(i, t){
 			$("#listTemplate").tmpl( {item: t}).appendTo( "#node-topic-references .node-data" );
 		})
+
+		var seasons = (d.seasons.length > 0)? d.seasons: ['none'];
+		$.each(seasons, function(i, s){
+			$("#listTemplate").tmpl( {item: 'Season ' + s}).appendTo( "#node-season-references .node-data" );
+		})
 	} else if(d.nodeType == 'weapon' ){
 		$("#weaponTemplate").tmpl( {
 			name: d.name,
@@ -1294,7 +1290,8 @@ function showConnections(d) {
 		}).appendTo( "#node-info" );		
 	} else if( d.nodeType == 'topic'){
 		$("#weaponTopicTemplate").tmpl( {
-			name: (d.name.toLowerCase().search('use') >= 0)? 'the ' + d.name.toLowerCase() : d.name.toLowerCase(),
+			//name: (d.name.toLowerCase().search('use') >= 0)? 'the ' + d.name.toLowerCase() : d.name.toLowerCase(),
+			name: (d.name.toLowerCase() == 'other')? 'wild board attack, throat slit or burned ' : d.name.toLowerCase(),
 			color: getColor(d.nodeType, d.size),
 			count: (d.numGames > 1) ? addCommas(d.numGames)	+ ' major characters are': addCommas(d.numGames)	+ ' major character is' 	
 		}).appendTo( "#node-info" );		
@@ -1384,15 +1381,13 @@ function getColor(topic, value){
 		} else if( value > 15 ){
 			color = '#5E0202';
 		}
-	}else if(topic == 'topic'){
+	} else if(topic == 'topic'){
 		
-		if( value <= 20){
+		if( value <= 1){
 			color = '#CEDBB4';
-		} else if( value > 20 && value <= 25){
-			color = '#CEDBB4';
-		} else if( value > 25 && value <= 30){
+		} else if( value == 2){
 			color = '#9DB270';
-		} else if( value > 30 ){
+		} else if( value > 2){
 			color = '#5E843A';
 		}
 	}
