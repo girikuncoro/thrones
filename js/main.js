@@ -856,6 +856,7 @@ function showBarConnections(d) {
 
 				var tArray = game.topicConnections[ d.name.toLowerCase().replace(' ', '') ]
 
+				console.log(tArray);
 				tArray.forEach(function(node){
 					
 					svg.select('.nodedot-' +node['className'])

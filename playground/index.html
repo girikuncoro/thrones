@@ -14,10 +14,13 @@
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script src="js/jquery.tmpl.min.js"></script>
 	<script id="gameTemplate" type="text/x-jquery-tmpl"> 
+
 		<div id='node-name'>${name}</div>
-		<div>
-			<img src="http://img2.wikia.nocookie.net/__cb20150409231554/gameofthrones/images/thumb/8/8b/GOT_Season_5_03.jpg/130px-0%2C2100%2C41%2C1899-GOT_Season_5_03.jpg" alt="targaryen" height="100" width="100">
+
+		<div class='node-topic' id='node-image-references'>
+			<img src="${imagesrc}" alt="thrones" width="100" height="100">
 		</div>
+
 		<div class='node-topic' id='node-game-sales'>	
 			<div class='node-label'>Status</div>
 			<div class='node-data-color' style='background-color: ${color};'></div>
