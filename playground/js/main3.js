@@ -54,6 +54,7 @@ var dataSource = 'data/thrones_characters.csv';
 
 d3.csv(dataSource, function (error, rows) {
 	data = rows;
+	console.log(data);
 	//processData(data);
 	processThrones(data);
 });
@@ -101,12 +102,12 @@ function processThrones(data){
 	
 
 	for(var d = 0; d < totalGames; d++){
-
 		games[ data[d]['name'] ] = {
 			name: data[d]['name'],
 			className: getClassName(data[d]['name']),
 			children: [],
-			size: 1,
+			size: data[d]['appeared'],
+			//size: 100,
 			numWeapons: 0,
 			weapons: [],
 			topics: [],
@@ -136,7 +137,7 @@ function processThrones(data){
 			}
 		}*/
 
-		/*
+		
 		if( minGameSales == undefined){
 			minGameSales = games[ data[d]['name'] ]['size']
 		} else if( minGameSales > games[ data[d]['name'] ]['size'] ){
@@ -144,8 +145,8 @@ function processThrones(data){
 		}
 		
 		if( games[ data[d]['name'] ]['size'] > maxGameSales ){
-			maxGameSales = games[ data[d]['name'] ]['size']
-		}*/
+			maxGameSales = games[ data[d]['name'] ]['size'];
+		}
 		
 		
 		var weaponTags = ( data[d]['weapons'] != '') ? data[d]['weapons'].split(', '): [];
@@ -374,7 +375,7 @@ function processThrones(data){
 	$('.gia-button').click(function(e){
 		if($(this).hasClass('gia-button-selected') == false){	
 			currentSelectionText = $(this).text();
-			$(this).text('Show all games')	
+			$(this).text('Show all characters')	
 			currentSelectionBtn = this;
 						
 			if($(this).attr('id') == 'btn-guns'){
@@ -727,7 +728,7 @@ function drawSmallChart(location, data, align, height){
                         'width': w + 'px'
                 })
         
-        w = 150
+        w = 150;
         
 
         var bars = vis.selectAll(".bar")  
@@ -892,7 +893,7 @@ function drawChart(){
 
 	var gameBarScale = d3.scale.linear()
 	    .domain([0,maxGameSales])
-	    .range([0,1]);
+	    .range([0,10]);
 	
 	
 	var nodes = cluster.nodes(map)
@@ -917,6 +918,8 @@ function drawChart(){
 		 
 	})
 	
+	// this is the bars (text excluded)
+
       //.attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
 	  .style('fill', function(d){
 		 	return getColor(d.nodeType, d.size)
@@ -937,8 +940,8 @@ function drawChart(){
 			translatevalue += barScale(d.size)
 		}
 		
-	
 		return "rotate(" + (d.x - 90) + ")translate(" + translatevalue + ")"; })
+      
     .append("text")
       .attr("dx", function(d) { return d.x < 180 ? 0 : 0; })
       .attr("dy", "5")
@@ -1167,8 +1170,8 @@ function showBarConnections(d) {
 			} else if( d.contentType == 'violence'){
 
 				var tArray = game.topicConnections[ d.name.toLowerCase().replace(' ', '') ]
-				console.log(d.name.toLowerCase().replace(' ', '') );
-				console.log(tArray);
+				//console.log(d.name.toLowerCase().replace(' ', '') );
+				//console.log(tArray);
 
 				tArray.forEach(function(node){
 					
@@ -1284,10 +1287,11 @@ function showConnections(d) {
 			imagesrc: d.image,
 			//image: d.image,
 			//color: getColor(d.nodeType, d.size),
+			episodes: d.size,
 			status: d.gameRating,
 			season: d.seasons
 		}).appendTo( "#node-info" );
-		console.log(d.image);
+		//console.log(d.image);
 		var weapons = (d.weapons.length > 0)? d.weapons: ['none'];
 		$.each(weapons, function(i, w){
 			$("#listTemplate").tmpl( {item: w}).appendTo( "#node-weapon-references .node-data" );
@@ -1386,7 +1390,18 @@ function getStatusColor(status){
 function getColor(topic, value){
 	var color = '#ccc'
 	if(topic == 'game'){
-		color = '#370CE8';
+		//color = '#370CE8';
+		if( value <= 10){
+			color = '#D7DEF7'
+		} else if( value > 10 && value <= 15){
+			color = '#8B9BD9'
+		} else if( value > 15 && value <= 25){
+			color = '#5265AE'
+		} else if( value > 25 && value <= 35){
+			color = '#394B9F'
+		} else if( value > 35 ){
+			color = '#2C3878'
+		}
 	
 	}else if(topic == 'weapon'){
 
