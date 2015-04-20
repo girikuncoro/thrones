@@ -11,50 +11,60 @@
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	
 	<script src="http://pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min.js"></script>
+	<script src="js/tabletop.js"></script>
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script src="js/jquery.tmpl.min.js"></script>
 	<script id="gameTemplate" type="text/x-jquery-tmpl"> 
-
 		<div id='node-name'>${name}</div>
-
-		<div class='node-topic' id='node-image-references'>
-			<img src="${imagesrc}" alt="thrones" width="100" height="100">
-		</div>
-
 		<div class='node-topic' id='node-game-sales'>	
-			<div class='node-label'>Status</div>
+			<div class='node-label'>Units sold</div>
 			<div class='node-data-color' style='background-color: ${color};'></div>
-			<div class='node-data-short'>${status}</div>
+			<div class='node-data-short'>${sales}</div>
+		</div>
+		<div class='node-topic' id='node-game-rating'>	
+			<div class='node-label'>Rating</div>
+			<div class='node-data'>${rating}</div>
 		</div>
 		<div class='node-topic' id='node-weapon-references'>	
-			<div class='node-label'>House</div>
+			<div class='node-label'>Weapons</div>
 			<div class='node-data'></div>
 		</div>
 		<div class='node-topic' id='node-topic-references'>	
-			<div class='node-label'>Death</div>
-			<div class='node-data'></div>
-		</div>
-		<div class='node-topic' id='node-episode-references'>	
-			<div class='node-label'>Appearance</div>
-			<div class='node-data'>${episodes} episodes</div>
-		</div>
-		<div class='node-topic' id='node-season-references'>	
-			<div class='node-label'>Season</div>
-			<div class='node-data'></div>
+			<div class='node-label'>Content</div>
+			<div class='node-data'>${content}</div>
 		</div>
 	</script>
+	
+	<script id="gameTemplateOld" type="text/x-jquery-tmpl"> 
+		<div id='node-name'>${name}</div>
+		<div class='node-topic' id='node-game-sales'>	
+			<div class='node-label'>Est. Units sold</div>
+			<div class='node-data-short'>${sales}</div>
+			<div class='node-data-color' style='background-color: ${color};'></div>
+		</div>
+		<div class='node-topic' id='node-weapon-references'>	
+			<div class='node-label'>Total weapons</div>
+			<div class='node-data'>${weaponCount}</div>
+		</div>
+		<div class='node-topic' id='node-topic-references'>	
+			<div class='node-label'>Total content descripters</div>
+			<div class='node-data'>${topicCount}</div>
+		</div>
+	</script>
+	
+	
 	
 	<script id="weaponTopicTemplate" type="text/x-jquery-tmpl"> 
 		<div class='node-topic-tags' id='node-tags'>	
 			<div class='node-data-color' style='background-color: ${color};'></div>
-			<div class='node-data-wide'>${count} killed by ${name}</div>
+			<div class='node-data-wide'>${count} content that includes ${name}</div>
 		</div>
 	</script>
 	
 	<script id="weaponTemplate" type="text/x-jquery-tmpl"> 
 		<div class='node-topic-tags' id='node-tags'>	
 			<div class='node-data-color' style='background-color: ${color};'></div>
-			<div class='node-data-wide'>${count} characters are allegiance to ${name}</div>
+			<div class='node-data-wide'>${count} games use ${name}</div>
 		</div>
 	</script>
 	
@@ -117,13 +127,22 @@
 	
 	<div class='row'>
 		<div class='col-12'>
-			<div id='source'>Sources: <a href="http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki">Game of Thrones Wikia</a> scraped by Python script with <a href="http://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup</a> package.</div>
+			<div id='source'>Sources: VGChartz, Entertainment Ratings Safety Board<br>Note: Game sale estimates include all platforms available; Ratings may vary slightly by platform.</div>
 		</div>
 	</div>
 	
 </div>
+
 	
-<div id='node-info' class='gia-popup'></div>	
-	<script src="js/main3.js"></script>
+
+
+
+
+
+		
+<div id='node-info' class='gia-popup'></div>
+	
+	
+	<script src="js/main4.js"></script>
 </body>
 </html>
