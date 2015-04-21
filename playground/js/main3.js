@@ -519,8 +519,14 @@ function drawSmallChart(location, data, align, height){
                                         } else if(d.name == 'm'){
                                                 text = 'Ages 17+ (M)'
                                         }
-                                } else if(d.contentType == 'guns' || d.contentType == 'violence'){
-                                        text = d.name
+                                } else if(d.contentType == 'guns'){
+                                    if (d.name == 'Guns') {
+                                    	text = 'Male';
+                                    } else {
+                                    	text = 'Female';
+                                    }
+                                } else if(d.contentType == 'violence'){
+                                	text = d.name;
                                 }
                                 return text; 
                         
