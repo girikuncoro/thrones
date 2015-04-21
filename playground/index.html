@@ -20,15 +20,10 @@
 		<div class='node-topic' id='node-image-references'>
 			<img src="${imagesrc}" alt="thrones" width="100" height="100">
 		</div>
-
 		<div class='node-topic' id='node-game-sales'>	
 			<div class='node-label'>Status</div>
 			<div class='node-data-color' style='background-color: ${color};'></div>
 			<div class='node-data-short'>${status}</div>
-		</div>
-		<div class='node-topic' id='node-weapon-references'>	
-			<div class='node-label'>House</div>
-			<div class='node-data'></div>
 		</div>
 		<div class='node-topic' id='node-topic-references'>	
 			<div class='node-label'>Death</div>
@@ -39,10 +34,26 @@
 			<div class='node-data'>${episodes} episodes</div>
 		</div>
 		<div class='node-topic' id='node-season-references'>	
-			<div class='node-label'>Season</div>
+			<div class='node-label'>Season(s)</div>
 			<div class='node-data'></div>
 		</div>
-	</script>
+		<div class='node-topic' id='node-weapon-references'>	
+			<div class='node-label'>House</div>
+			<div class='node-data'></div>
+		</div>
+		<div class='node-topic' id='node-culture'>	
+			<div class='node-label'>Culture</div>
+			<div class='node-data'>${culture}</div>
+		</div>
+		<div class='node-topic' id='node-religion'>	
+			<div class='node-label'>Religion</div>
+			<div class='node-data'>${religion}</div>
+		</div>
+		<div class='node-topic' id='node-portrayed'>	
+			<div class='node-label'>Portrayed</div>
+			<div class='node-data'>${portrayed}</div>
+		</div>
+	</script>	
 	
 	<script id="weaponTopicTemplate" type="text/x-jquery-tmpl"> 
 		<div class='node-topic-tags' id='node-tags'>	

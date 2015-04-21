@@ -99,9 +99,8 @@ function processThrones(data){
 		weaponNodes = [],
 		topicNodes = [],
 		deathNodes = [];
-	
 
-	for(var d = 0; d < totalGames; d++){
+		for(var d = 0; d < totalGames; d++){
 		games[ data[d]['name'] ] = {
 			name: data[d]['name'],
 			className: getClassName(data[d]['name']),
@@ -123,7 +122,10 @@ function processThrones(data){
 			weaponConnections:{'guns': [], 'noguns': []},
 			//topicConnections: {'violence': [], 'noviolence': []}
 			topicConnections: {'deceased': [], 'alive': []},
-			gender: data[d]['gender']
+			gender: data[d]['gender'],
+			portrayed: data[d]['portrayed'],
+			culture: data[d]['culture'],
+			religion: data[d]['religion']
 		}
 		
 		
@@ -1005,22 +1007,25 @@ function showConnections(d) {
 			//color: getColor(d.nodeType, d.size),
 			episodes: d.size,
 			status: d.gameRating,
-			season: d.seasons
+			season: d.seasons,
+			religion: d.religion,
+			culture: d.culture,
+			portrayed: d.portrayed
 		}).appendTo( "#node-info" );
 		//console.log(d.image);
-		var weapons = (d.weapons.length > 0)? d.weapons: ['none'];
+		var weapons = (d.weapons.length > 0)? d.weapons: ['None'];
 		$.each(weapons, function(i, w){
 			$("#listTemplate").tmpl( {item: w}).appendTo( "#node-weapon-references .node-data" );
 		})
 		
-		var topics = (d.topics.length > 0)? d.topics: ['none'];
+		var topics = (d.topics.length > 0)? d.topics: ['N/A'];
 		$.each(topics, function(i, t){
 			$("#listTemplate").tmpl( {item: t}).appendTo( "#node-topic-references .node-data" );
 		})
 
-		var seasons = (d.seasons.length > 0)? d.seasons: ['none'];
+		var seasons = (d.seasons.length > 0)? d.seasons: ['None'];
 		$.each(seasons, function(i, s){
-			$("#listTemplate").tmpl( {item: 'Season ' + s}).appendTo( "#node-season-references .node-data" );
+			$("#listTemplate").tmpl( {item: s}).appendTo( "#node-season-references .node-data" );
 		})
 	} else if(d.nodeType == 'weapon' ){
 		$("#weaponTemplate").tmpl( {
@@ -1042,7 +1047,7 @@ function showConnections(d) {
 
 
 function getRating(rating){
-		var text = 'none'
+		var text = 'None'
 		if(rating == 'e'){
 			text = 'E (everyone)'
 		} else if(rating == 'e10'){
