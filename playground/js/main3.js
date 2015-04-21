@@ -1100,17 +1100,17 @@ function getStatusColor(status){
 function getColor(topic, value){
 	var color = '#ccc'
 	if(topic == 'game'){
-		//color = '#370CE8';
+		//color = '#D7DEF7';
 		if( value <= 10){
-			color = '#D7DEF7'
-		} else if( value > 10 && value <= 15){
 			color = '#8B9BD9'
-		} else if( value > 15 && value <= 25){
+		} else if( value > 10 && value <= 15){
 			color = '#5265AE'
-		} else if( value > 25 && value <= 35){
+		} else if( value > 15 && value <= 25){
 			color = '#394B9F'
-		} else if( value > 35 ){
+		} else if( value > 25 && value <= 35){
 			color = '#2C3878'
+		} else if( value > 35 ){
+			color = '#162252'
 		}
 	
 	}else if(topic == 'weapon'){
@@ -1127,16 +1127,17 @@ function getColor(topic, value){
 			color = '#5E0202';
 		}*/
 
+		// CEDBB4 
 		if( value <= 1){
-			color = '#CEDBB4';
-		} else if( value > 1 && value <= 5){
 			color = '#9DB270';
-		} else if( value > 5 && value <= 10){
+		} else if( value > 1 && value <= 5){
 			color = '#5E843A';
-		} else if( value > 10 && value <= 15){
+		} else if( value > 5 && value <= 10){
 			color = '#3C602E';
-		} else if( value > 15 ){
+		} else if( value > 10 && value <= 15){
 			color = '#1E3B13';
+		} else if( value > 15 ){
+			color = '#2F4F2F';
 		}
 	} else if(topic == 'topic'){
 		
@@ -1148,11 +1149,11 @@ function getColor(topic, value){
 			color = '#5E843A';
 		}*/
 		if( value <= 1){
-			color = '#FFE2DB';
-		} else if( value == 2){
 			color = '#E88B78';
-		} else if( value > 2){
+		} else if( value == 2){
 			color = '#CC2F27';
+		} else if( value > 2){
+			color = '#871D1B';
 		}
 	}
 	return color;	
