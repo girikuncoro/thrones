@@ -917,12 +917,12 @@ function showConnections(d) {
 	if(d.nodeType == 'game'){
 		$("#gameTemplate").tmpl( {
 			name: d.name,
-			color: getStatusColor(d.gameRating),
+			color: getratingColor(d.gameRating),
 			imagesrc: d.image,
 			//image: d.image,
 			//color: getColor(d.nodeType, d.size),
 			episodes: d.size,
-			status: d.gameRating,
+			rating: d.gameRating,
 			season: d.seasons,
 			religion: d.religion,
 			culture: d.culture,
@@ -1013,8 +1013,8 @@ function getGradient(startValue, endValue, topic1, topic2){
 	return gradientId;
 }
 
-function getStatusColor(status){
-	if (status == 'Alive') {
+function getratingColor(rating){
+	if (rating == 'Alive') {
 		color = '#7EFF2B';
 	} else {
 		color = '#00302B';
