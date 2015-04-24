@@ -944,7 +944,7 @@ function showConnections(d) {
 			$("#listTemplate").tmpl( {item: s}).appendTo( "#node-season-references .node-data" );
 		})
 	} else if(d.nodeType == 'weapon' ){
-		$("#alligianceTemplate").tmpl( {
+		$("#allegianceTemplate").tmpl( {
 			name: d.name,
 			color: getColor(d.nodeType, d.size),
 			count: addCommas(d.numGames)			
