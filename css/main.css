@@ -433,3 +433,12 @@ body {
 	
 }
 
+img {
+	display: block;
+	max-width: 500px;
+	max-height: 95px;
+	width: auto;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+}

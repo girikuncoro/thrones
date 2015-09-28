@@ -5,67 +5,76 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>video games</title>
+	<title>Visualizing Game of Thrones</title>
 	
 	<link rel="stylesheet" type="text/css" href="http://pasteup.guim.co.uk/0.0.3/css/pasteup.min.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	
 	<script src="http://pasteup.guim.co.uk/js/lib/jquery/1.8.1/jquery.min.js"></script>
-	<!--<script src="js/tabletop.js"></script>-->
-	<script src="js/new-tabletop.js"></script>
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<script src="js/jquery.tmpl.min.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-43046283-2', 'auto');
+		ga('send', 'pageview');
+	</script>
 	<script id="gameTemplate" type="text/x-jquery-tmpl"> 
+
 		<div id='node-name'>${name}</div>
+
+		<div class='node-topic' id='node-image-references'>
+			<img src="${imagesrc}" alt="thrones" width="100" height="100">
+		</div>
 		<div class='node-topic' id='node-game-sales'>	
-			<div class='node-label'>Units sold</div>
+			<div class='node-label'>Status</div>
 			<div class='node-data-color' style='background-color: ${color};'></div>
-			<div class='node-data-short'>${sales}</div>
+			<div class='node-data-short'>${rating}</div>
 		</div>
-		<div class='node-topic' id='node-game-rating'>	
-			<div class='node-label'>Rating</div>
-			<div class='node-data'>${rating}</div>
-		</div>
-		<div class='node-topic' id='node-weapon-references'>	
-			<div class='node-label'>Weapons</div>
+		<div class='node-topic' id='node-topic-references'>	
+			<div class='node-label'>Death</div>
 			<div class='node-data'></div>
 		</div>
-		<div class='node-topic' id='node-topic-references'>	
-			<div class='node-label'>Content</div>
-			<div class='node-data'>${content}</div>
+		<div class='node-topic' id='node-episode-references'>	
+			<div class='node-label'>Appearance</div>
+			<div class='node-data'>${episodes} episodes</div>
 		</div>
-	</script>
-	
-	<script id="gameTemplateOld" type="text/x-jquery-tmpl"> 
-		<div id='node-name'>${name}</div>
-		<div class='node-topic' id='node-game-sales'>	
-			<div class='node-label'>Est. Units sold</div>
-			<div class='node-data-short'>${sales}</div>
-			<div class='node-data-color' style='background-color: ${color};'></div>
+		<div class='node-topic' id='node-season-references'>	
+			<div class='node-label'>Season(s)</div>
+			<div class='node-data'></div>
 		</div>
 		<div class='node-topic' id='node-weapon-references'>	
-			<div class='node-label'>Total weapons</div>
-			<div class='node-data'>${weaponCount}</div>
+			<div class='node-label'>House</div>
+			<div class='node-data'></div>
 		</div>
-		<div class='node-topic' id='node-topic-references'>	
-			<div class='node-label'>Total content descripters</div>
-			<div class='node-data'>${topicCount}</div>
+		<div class='node-topic' id='node-culture'>	
+			<div class='node-label'>Culture</div>
+			<div class='node-data'>${culture}</div>
+		</div>
+		<div class='node-topic' id='node-religion'>	
+			<div class='node-label'>Religion</div>
+			<div class='node-data'>${religion}</div>
+		</div>
+		<div class='node-topic' id='node-portrayed'>	
+			<div class='node-label'>Portrayed</div>
+			<div class='node-data'>${portrayed}</div>
+		</div>
+	</script>	
+	
+	<script id="deathTemplate" type="text/x-jquery-tmpl"> 
+		<div class='node-topic-tags' id='node-tags'>	
+			<div class='node-data-color' style='background-color: ${color};'></div>
+			<div class='node-data-wide'>${count} killed by ${name}</div>
 		</div>
 	</script>
 	
-	
-	
-	<script id="weaponTopicTemplate" type="text/x-jquery-tmpl"> 
+	<script id="allegianceTemplate" type="text/x-jquery-tmpl"> 
 		<div class='node-topic-tags' id='node-tags'>	
 			<div class='node-data-color' style='background-color: ${color};'></div>
-			<div class='node-data-wide'>${count} content that includes ${name}</div>
-		</div>
-	</script>
-	
-	<script id="weaponTemplate" type="text/x-jquery-tmpl"> 
-		<div class='node-topic-tags' id='node-tags'>	
-			<div class='node-data-color' style='background-color: ${color};'></div>
-			<div class='node-data-wide'>${count} games use ${name}</div>
+			<div class='node-data-wide'>${count} characters are in allegiance with ${name}</div>
 		</div>
 	</script>
 	
@@ -73,57 +82,106 @@
 		<div class='node-list-item'>${item}</div>	
 	</script>
 	
-		
+	<style>
+		body {background-color: #F3F2F2}
+	</style>
 </head>
 <body>
+
+</br><img src="got.png">
 
 <div class='wrap'>	
 	<div class='row' id='circle-chart-container'>
 
 		<div class='col-12' id='game-network'></div>
-		<div class='chart-detail' style='right: 0px; top: 650px; width: 100px; text-align: left;'>
-			<p>Six of the top 50 games, which are sports themed, do not have content warnings.</p>
+		<div class='chart-detail' style='right: 50px; top: 90px; width: 140px; text-align: left;'>
+			<p><svg height="100" width="205">
+				<text x="103" y= "25" fill="black" font-size="12" font-family="Arial" font-weight="bold" text-anchor="middle" alignment-baseline="central">Most Episode Appearances</text>
+
+				<circle cx="35" cy="50" r="9" fill="#D7DEF7"></circle>
+				<circle cx="67.5" cy="50" r="9" fill="#8B9BD9"></circle>
+				<circle cx="100" cy="50" r="9" fill="#5265AE"></circle>
+				<circle cx="132.5" cy="50" r="9" fill="#394B9F"></circle>
+				<circle cx="165" cy="50" r="9" fill="#2C3878"></circle>	
+
+				<text x="35" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 10 </text>	
+				<text x="67.5" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 15 </text>	
+				<text x="100" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 25 </text>	
+				<text x="132.5" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 35 </text>	
+				<text x="167.5" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 35+ </text>
+
+				<text x="100" y= "85" fill="black" font-size="11" font-family="Arial" text-anchor="middle" alignment-baseline="central"> (# episodes appeared in) </text>
+			</svg></p>
 		</div>
 		<div id='anchored-charts'>
 			<div class='anchored-chart' id='chart-violence'>
-				<div class='option-text'>Violent content</div>
+				<div class='option-text' font-family="Arial">Death Toll</div>
 				
-			
-				<p class='detail-text' > Though two in three games carry a violent content label, just over half are considered violent if "cartoon violence" is excluded.</p>
+				<p class='detail-text' >According to online polls, the most important death scene is the Red Wedding, which saw the deaths of Robb Stark (King of the North and Our Hearts), his mother Catelyn Stark, and his pregnant wife, Talisa. Oh, and his direwolf, Grey Wind.</p>
 				<div class='callout-chart' id='chart-game-violence'></div>
-				<div class='gia-button' id='btn-violence'>Show violent games</div>			
+				<div class='gia-button' id='btn-violence'>Show Deceased</div>			
 			</div>
 		
 		
 			<div class='anchored-chart' id='chart-game-guns'>
 			
-				<div class='option-text'>Realistic firearms</div>
+				<div class='option-text'>Allegiances by Gender</div>
 			
-				<p class='detail-text' >Realistic weaponry from machine guns to handguns were found in less than half of 2012's top 50 games.</p>
+				<p class='detail-text' >Game of Thrones is groundbreaking in its cast of both strong male and female characters. Emilia Clarke's Daenerys has become so popular, 146 baby girls were named Khaleesi in 2013!</p>
 				<div class='callout-chart' id='chart-game-weapons'></div>
-				
-				<div class='gia-button' id='btn-guns'>Show games with guns</div>
+				<div class='gia-button' id='btn-guns'>Show Male Characters</div>
 			
 			</div>
 		
-		
-			<div class='anchored-chart' id='chart-game-audience'>
-			
-				<div class='option-text' style='text-align:left; width: 200px;'>The suggested audience</div>
-				<p class='detail-text' >Games are rated by an independent rating board, <a href='http://www.esrb.org/ratings/ratings_guide.jsp' target='_blank'>ESRB</a>.</p>
-				<div class='callout-chart-large' id='chart-game-ratings'></div>
-				
-				<div class='gia-button' id='btn-audience'  style='float:left;'>Show adult games</div>
+			<div class='chart-detail' style='left: 200px; top: 75px; width: 120px; text-align: left;'>
+				<p><svg height="100" width="205">
+					<text x="103" y= "25" fill="black" font-size="12" font-family="Arial" font-weight="bold" text-anchor="middle" alignment-baseline="central">Causes of Death</text>
+
+					<circle cx="67.5" cy="50" r="9" fill="#E88B78"></circle>
+					<circle cx="100" cy="50" r="9" fill="#CC2F27"></circle>
+					<circle cx="132.5" cy="50" r="9" fill="#871D1B"></circle>
+
+					<text x="67.5" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 1 </text>	
+					<text x="100" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 2 </text>	
+					<text x="132.5" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 3+ </text>	
+					
+					<text x="105" y= "85" fill="black" font-size="11" font-family="Arial" text-anchor="middle" alignment-baseline="central"> (# major characters died this way) </text>
+				</svg></p>
 			</div>
-			
+		
+			<div class='chart-detail' style='left: 200px; top: 610px; width: 120px; text-align: left;'>
+				<p><svg height="100" width="205">
+					<text x="103" y= "25" fill="black" font-size="12" font-family="Arial" font-weight="bold" text-anchor="middle" alignment-baseline="central">House Allegiances</text>
+
+					<circle cx="55" cy="50" r="9" fill="#9DB270"></circle>
+					<circle cx="87.5" cy="50" r="9" fill="#5E843A"></circle>
+					<circle cx="120" cy="50" r="9" fill="#3C602E"></circle>
+					<circle cx="152.5" cy="50" r="9" fill="#1E3B13"></circle>
+
+					<text x="55" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 1 </text>	
+					<text x="87.5" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 5 </text>	
+					<text x="120" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 10 </text>	
+					<text x="152.5" y= "70" fill="black" font-size="10" font-family="Arial" text-anchor="middle" alignment-baseline="central"> 10+ </text>	
+
+					<text x="105" y= "85" fill="black" font-size="11" font-family="Arial" text-anchor="middle" alignment-baseline="central"> (# major characters in house) </text>
+				</svg></p>
+			</div>
+
+			<div class='chart-detail' style='left: 400px; top: 60px; width: 120px; text-align: left;'>
+				<p>Game of Thrones has shown over 5,000 on-screen deaths, including a number of major characters.</p>
+			</div>
+
+			<div class='chart-detail' style='left: 800px; top: 600px; width: 120px; text-align: left;'>
+				<p>Game of Thrones is so popular that it has broken illegal download world records--the season 4 finale "The Children" had roughly 1.5 million downloads within just the first 12 hours after the finale aired. </p>
+			</div>
+
 		</div>
 	</div>
 	
-	
-	
 	<div class='row'>
 		<div class='col-12'>
-			<div id='source'>Sources: VGChartz, Entertainment Ratings Safety Board<br>Note: Game sale estimates include all platforms available; Ratings may vary slightly by platform.</div>
+			<div id='source'>Created by <a href="http://twitter.com/girikuncoro">Giri Kuncoro</a>, <a href="https://www.facebook.com/allie.meng?fref=ts">Allie Meng</a>, & <a href="https://twitter.com/josselyntsai">Josselyn Tsai</a></div>
+			<div id='source'>Sources: <a href="http://gameofthrones.wikia.com/wiki/Game_of_Thrones_Wiki">Game of Thrones Wikia</a> scraped by Python script with <a href="http://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup</a> package.</div>
 		</div>
 	</div>
 	
