@@ -15,73 +15,20 @@ body {
 	margin: 0;
 	text-rendering: optimizeLegibility;
 }
- 
-#article-header {
-	display: none;
-}
- 
-#gia-header {
-	width: 940px;
-	margin: 0px auto 40px auto;
-	float: left;
-}
- 
-#gia-header .clearfix {
-    content: ".";
-    display: block;
-    clear: both;
-    visibility: hidden;
-    line-height: 0;
-    height: 0;
-}
- 
-#gia-header #social-tools-container {
-	display: block;
-	width: 420px;
-	min-height: 20px;
-        margin: 0 auto;
-        padding-top: 20px;
-}
- 
-#gia-header #social-tools-container ul#content-actions {
-    float: none;
-    width: 420px;
-}
- 
-#gia-header #social-tools-container ul#content-actions li {
-	display: block;
-	float: left;
-        width: 100px;
-	margin: 0 20px;
-}
- 
-#gia-header h1 {
-	margin-bottom: 40px;
-	font-family: Georgia, Times, serif;
-	font-size: 36px;
-	line-height: 1.1em;
-	text-align: center;
-}
- 
-#gia-header p {
-	font-size: 15px;
-	line-height: 1.4em;
-	text-align: center;
-}
 
-/* all single-instance buttons get the .gia-button class */
-.gia-button {
+/* all single-instance buttons get the .got-button class */
+.got-button {
   display: inline-block;
 	padding: 8px 10px;
- 
+
 	color: #fff;
 	font-size: 12px;
 	font-family: Helvetica, Arial, sans-serif;
 	font-weight: 200;
 	line-height: 1em;
- 
+
 	cursor: pointer;
- 
+
 	/* if text is 20px or larger */
 	text-shadow:-2px -2px 0px #074168, 1px 1px 1px rgba(255,255,255,.2);
 	/* if text is smaller than 20px */
@@ -89,18 +36,18 @@ body {
 	-webkit-background-clip: text;
 	-moz-background-clip: text;
 	background-clip: text;
- 
+
 	border:1px solid #074168;
-	
+
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #2068a4), color-stop(1, #125185) );
 	background:-moz-linear-gradient( center top, #2068a4 5%, #125185 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#2068a4', endColorstr='#125185');
 	background-color:#2068a4;
- 
+
 	-moz-border-radius:2px;
 	-webkit-border-radius:2px;
 	border-radius:2px;
- 
+
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -108,27 +55,27 @@ body {
 	-ms-user-select: none;
 	user-select: none;
 }
- 
-.gia-button:hover {
+
+.got-button:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #196191), color-stop(1, #125185) );
 	background:-moz-linear-gradient( center top, #196191 5%, #125185 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#196191', endColorstr='#125185');
 	background-color:#196191;
 }
- 
-.gia-button:active {
+
+.got-button:active {
 	position:relative;
 	top:1px;
- 
+
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #0a3f6b), color-stop(1, #125185) );
 	background:-moz-linear-gradient( center top, #0a3f6b 5%, #125185 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0a3f6b', endColorstr='#125185');
 	background-color:#0a3f6b;
 }
- 
+
 /* selected state, if necessary*/
-.gia-button-selected,
-.gia-button-selected:hover {
+.got-button-selected,
+.got-button-selected:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #0a3f6b), color-stop(1, #125185) );
 	background:-moz-linear-gradient( center top, #0a3f6b 5%, #125185 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#0a3f6b', endColorstr='#125185');
@@ -167,7 +114,7 @@ body {
 .circle-text-highlight {
 	font-weight: bold;
 	opacity: 1;
-}		
+}
 
 
 .circle-text {
@@ -233,7 +180,7 @@ body {
 	margin-top: 5px;
 	padding-top: 5px;
 	border-top: 1px solid #ccc;
-	
+
 }
 
 .node-data-short {
@@ -252,7 +199,7 @@ body {
 	width: 85%;
 	margin-right: 3%;
 	text-transform: lowercase;
-	
+
 }
 
 
@@ -261,7 +208,7 @@ body {
 	float: left;
 }
 
-.gia-popup {
+.got-popup {
   pointer-events: none;
   padding: 6px 6px 6px 6px;
   color: #333;
@@ -347,7 +294,7 @@ body {
 
 .callout-chart-large {
 	width: 100%;
-	
+
 }
 
 .bar {
@@ -430,7 +377,7 @@ body {
 }
 #intro-text p {
 	text-align: left;
-	
+
 }
 
 img {
