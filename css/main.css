@@ -28,7 +28,7 @@ img {
 
 /* all single-instance buttons get the .got-button class */
 .got-button {
-  display: inline-block;
+  	display: inline-block;
 	padding: 8px 10px;
 
 	color: #fff;
