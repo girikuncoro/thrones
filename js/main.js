@@ -14,11 +14,11 @@ var diameter = 640,
 var cluster = d3.layout.cluster()
     .size([360, innerRadius])
 	.sort(function(a, b) {
-		var valueA = a.appear * 100
-		var valueB = b.appear * 100
+		var valueA = a.appear * 100;
+		var valueB = b.appear * 100;
 
-		var charA = a.name.toLowerCase().charCodeAt(0)
-		var charB = b.name.toLowerCase().charCodeAt(0)
+		var charA = a.name.toLowerCase().charCodeAt(0);
+		var charB = b.name.toLowerCase().charCodeAt(0);
 
 		if(a.nodeType == 'char'){
 			return d3.descending(valueA, valueB);
@@ -34,9 +34,9 @@ var svg = d3.select("#got-network").append("svg")
     .attr("width", circle)
     .attr("height", diameter+240)
   .append("g")
-    .attr("transform", "translate(" + (radius + 75) + "," + (radius - 50) + ")")
+    .attr("transform", "translate(" + (radius + 75) + "," + (radius - 50) + ")");
 
-var svgDefs = svg.append("svg:defs")
+var svgDefs = svg.append("svg:defs");
 
 var line = d3.svg.line.radial()
     .interpolate("bundle")
@@ -60,7 +60,7 @@ var gradientCounter = 0,
 	charAlive = [],
 	charDeceased = [],
 	charMale = [],
-	charFemale = []
+	charFemale = [];
 
 // Main data processing
 d3.csv(dataSource, function (error, rows) {
@@ -117,12 +117,13 @@ function processThrones(data){
 			religion: data[d]['religion']
 		}
 
-		statusTags = ( data[d]['houseallegiance'] != '') ? data[d]['houseallegiance'].split(', '): [];
-		houseTags = ( data[d]['deathcause'] != '' ) ? data[d]['deathcause'].split(', '): [];
+		statusTags = ( data[d]['houseallegiance'] != '' ) ? data[d]['houseallegiance'].split(', ') : [];
+		houseTags = ( data[d]['deathcause'] != '' ) ? data[d]['deathcause'].split(', ') : [];
 
 		if(charStatus.hasOwnProperty(data[d]['status'])){
 			charStatus[data[d]['status']]['total'] ++;
-			charStatus[data[d]['status']]['data'].push(chars[ data[d]['name'] ])
+			charStatus[data[d]['status']]['data'].push(chars[ data[d]['name'] ]);
+
 		} else {
 			charStatus[data[d]['status']] = {
 				name: data[d]['status'],
@@ -133,6 +134,7 @@ function processThrones(data){
 
 		if( minCharAppear == undefined){
 			minCharAppear = chars[ data[d]['name'] ]['appear'];
+
 		} else if( minCharAppear > chars[ data[d]['name'] ]['appear'] ){
 			minCharAppear = chars[ data[d]['name'] ]['appear'];
 		}
@@ -162,15 +164,17 @@ function processThrones(data){
 				}
 
 				chardeath_links.push({
-					type: 'game-weapon-link',
+					type: 'char-death-link',
 					source: chars[ data[d]['name'] ],
 					target: weapons[w]
 				})
+
 				weapons[w]['appear'] ++;
 				weapons[w]['numChars'] ++;
 
 				weapons[w]['connectedNodes'].push(chars[ data[d]['name'] ]['className']);
 				weapons[w]['chars'].push(chars[ data[d]['name'] ]['name']);
+
 				chars[ data[d]['name'] ]['connectedNodes'].push(weapons[w]['className']);
 				chars[ data[d]['name'] ]['weapons'].push(weapons[w]['name']);
 
@@ -178,6 +182,7 @@ function processThrones(data){
 					includeCharDeath = true
 					weapons[w]['genderLink'] = weapons[w]['barLinks']['male'] = 'male'
 					chars[ data[d]['name'] ]['houseConnections']['male'].push(weapons[w])
+
 				} else {
 					weapons[w]['genderLink'] = weapons[w]['barLinks']['female'] = 'female'
 					chars[ data[d]['name'] ]['houseConnections']['female'].push(weapons[w])
@@ -186,34 +191,35 @@ function processThrones(data){
 			})
 
 			if(includeCharDeath){
-				charMale.push(chars[ data[d]['name'] ])
-				chars[ data[d]['name'] ]['genderLink'] = 'male'
+				charMale.push(chars[ data[d]['name'] ]);
+				chars[ data[d]['name'] ]['genderLink'] = 'male';
 
 			} else {
-				charFemale.push(chars[ data[d]['name'] ])
-				chars[ data[d]['name'] ]['genderLink']  = 'female'
+				charFemale.push(chars[ data[d]['name'] ]);
+				chars[ data[d]['name'] ]['genderLink']  = 'female';
 			}
 
 		} else {
-			charFemale.push(chars[ data[d]['name'] ])
-			chars[ data[d]['name'] ]['genderLink']  = 'female'
+			charFemale.push(chars[ data[d]['name'] ]);
+			chars[ data[d]['name'] ]['genderLink']  = 'female';
 		}
 
 		if( houseTags.length > 0){
 			var includeCharHouse = false;
 
 			chars[ data[d]['name'] ]['numHouses'] = statusTags.length;
-			houseTags.forEach(function(t){
 
-				if( !houses[ t ] ){
-					houses[t] = {
-						name: t,
-						className: getClassName(t),
+			houseTags.forEach(function(h){
+
+				if( !houses[h] ){
+					houses[h] = {
+						name: h,
+						className: getClassName(h),
 						children: [],
 						appear: 0,
 						numChars: 0,
 						chars: [],
-						nodeType: 'hous',
+						nodeType: 'death',
 						connectedNodes: [],
 						barLinks: {},
 						deathLink: ''
@@ -223,26 +229,30 @@ function processThrones(data){
 				charhouse_links.push({
 					type: 'char-house-link',
 					source: chars[ data[d]['name'] ],
-					target: houses[t]
+					target: houses[h]
 				})
-				houses[t]['appear'] ++;
-				houses[t]['numChars'] ++;
 
-				houses[t]['connectedNodes'].push(chars[ data[d]['name'] ]['className']);
-				houses[t]['chars'].push(chars[ data[d]['name'] ]['name']);
-				chars[ data[d]['name'] ]['connectedNodes'].push(houses[t]['className']);
-				chars[ data[d]['name'] ]['houses'].push(houses[t]['name']);
+				houses[h]['appear'] ++;
+				houses[h]['numChars'] ++;
+
+				houses[h]['connectedNodes'].push(chars[ data[d]['name'] ]['className']);
+				houses[h]['chars'].push(chars[ data[d]['name'] ]['name']);
+
+				chars[ data[d]['name'] ]['connectedNodes'].push(houses[h]['className']);
+				chars[ data[d]['name'] ]['houses'].push(houses[h]['name']);
 
 				if(chars[ data[d]['name'] ]['charStatus'] == 'Deceased'){
 					includeCharHouse = true;
-					houses[t]['deathLink'] = houses[t]['barLinks']['violence'] = 'violence'
-					chars[ data[d]['name'] ]['deathConnections']['deceased'].push(houses[t]);
+					houses[h]['deathLink'] = houses[h]['barLinks']['death'] = 'violence';
+					chars[ data[d]['name'] ]['deathConnections']['deceased'].push(houses[h]);
+
 				} else {
-					houses[t]['deathLink'] = houses[t]['barLinks']['violence'] = 'noviolence'
-					chars[ data[d]['name'] ]['deathConnections']['alive'].push(houses[t])
+					houses[h]['deathLink'] = houses[h]['barLinks']['death'] = 'noviolence';
+					chars[ data[d]['name'] ]['deathConnections']['alive'].push(houses[h]);
 				}
 
 			})
+
 			if(includeCharHouse){
 				charAlive.push(chars[ data[d]['name'] ]);
 				chars[ data[d]['name'] ]['deathLink'] = 'deceased';
@@ -256,34 +266,42 @@ function processThrones(data){
 			chars[ data[d]['name'] ]['deathLink'] = 'alive';
 		}
 	}
-	for(var g in chars){
-		charRootNode.children.push(chars[g])
-		if(chars[g]['numHouses'] > maxCharsToHouses){
-			maxCharsToHouses = chars[g]['numHouses'];
+
+	for(var c in chars){
+		charRootNode.children.push(chars[c]);
+
+		if(chars[c]['numHouses'] > maxCharsToHouses){
+			maxCharsToHouses = chars[c]['numHouses'];
 		}
-		if(chars[g]['numDeath'] > maxCharToDeath){
-			maxCharToDeath = chars[g]['numDeath'];
+
+		if(chars[c]['numDeath'] > maxCharToDeath){
+			maxCharToDeath = chars[c]['numDeath'];
 		}
 
 	}
+
 	for(var w in weapons){
-		deathRootNode.children.push(weapons[w])
+		deathRootNode.children.push(weapons[w]);
+
 		if(weapons[w]['numChars'] > maxDeathToChars){
 			maxDeathToChars = weapons[w]['numChars'];
 		}
 	}
-	for(var t in houses){
-		houseRootNode.children.push(houses[t])
-		if(houses[t]['numChars'] > maxHousesToChars){
-			maxHousesToChars = houses[t]['numChars'];
+
+	for(var h in houses){
+		houseRootNode.children.push(houses[h]);
+
+		if(houses[h]['numChars'] > maxHousesToChars){
+			maxHousesToChars = houses[h]['numChars'];
 		}
 	}
 
-	maxCharDeath = maxCharToDeath
+	maxCharDeath = maxCharToDeath;
 	if( maxDeathToChars > maxCharToDeath){
 		maxCharDeath = maxDeathToChars;
 	}
-	maxCharHouses = maxCharsToHouses
+
+	maxCharHouses = maxCharsToHouses;
 	if( maxHousesToChars > maxCharHouses){
 		maxCharHouses = maxHousesToChars;
 	}
@@ -296,8 +314,7 @@ function processThrones(data){
 
 	var statusArray = []
 	for(var k in charStatus){
-		charStatus[k].contentType = 'status'
-		//statusArray.push(charStatus[k])
+		charStatus[k].contentType = 'status';
 	}
 
 	var genderArray = [
@@ -330,8 +347,7 @@ function processThrones(data){
 			total: totalChars - charAlive.length,
 			contentType: 'death',
 			data: charDeceased
-		},
-
+		}
 	]
 
 	drawSmallChart('chart-char-death', deathArray, 'left', 60);
@@ -350,155 +366,148 @@ function processThrones(data){
 			}
 
 		} else {
-			hideBarConnections(currentSelection )
+			hideBarConnections( currentSelection );
 		}
 
 	})
 }
 
-var smallVis = {}
+var smallVis = {};
 
 function drawSmallChart(location, data, align, height){
-        var h = height,
-                w = 200,
-                barH = 25;
+    var h = height,
+        w = 200,
+        barH = 25;
 
-        var startX = 0
-        var startY = 1
-        smallVis [data[0]['contentType']] = vis = d3.select("#" + location).append('svg')
-                .attr({
-                        'height': h + 'px',
-                        'width': w + 'px'
-                })
+    var startX = 0;
+    var startY = 1;
 
-        w = 150;
-        var bars = vis.selectAll(".bar")
-                .data(data)
-                .enter()
-                        .append('g')
-                        .attr('class', 'bar-group')
-                        .attr('id', function(d){
-                                return 'bargroup-' + d.name.toLowerCase().replace(' ', '')
-                        })
+    smallVis[data[0]['contentType']] = vis = d3.select("#" + location).append('svg')
+            .attr({
+                'height': h + 'px',
+                'width': w + 'px'
+            });
 
-                        bars.append('rect')
-                        .attr("x", function(d,i){
-                                if(align == 'right'){
-                                        return w -barW(d.total) -30  //+ barX(data,i)
-                                } else {
-                                        return startX +30 //+ barX(data,i)
-                                }
-                        })
-                        .attr("y", function (d,i){
+    w = 150;
 
-                                return startY + (barH + 1) * i
-                        })
-                        .attr("width", function(d){
-                                return barW(d.total)
-                        })
-                        .attr("height", barH)
-                        .attr('id', function(d){
-                                return 'bar-' + d.name.toLowerCase().replace(' ', '')
-                        })
-                        .attr('class', 'bar')
-                        .style('fill', function(d){
+    var bars = vis.selectAll(".bar")
+            .data(data)
+          .enter()
+            .append('g')
+            .attr('class', 'bar-group')
+            .attr('id', function(d){
+                    return 'bargroup-' + d.name.toLowerCase().replace(' ', '')
+            });
 
-                                if(d.contentType == 'status'){
-                                        return '#5265AE'
-                                } else if(d.contentType == 'house'){
-                                        return '#5E843A';
-                                } else if(d.contentType == 'death'){
-                                        return '#CC2F27'
-                                }
+    bars.append('rect')
+        .attr("x", function(d,i){
+            if(align == 'right'){
+                return w -barW(d.total) -30  //+ barX(data,i)
+            } else {
+                return startX +30 //+ barX(data,i)
+            }
+        })
+        .attr("y", function (d,i){
+            return startY + (barH + 1) * i
+        })
+        .attr("width", function(d){
+            return barW(d.total)
+        })
+        .attr("height", barH)
+        .attr('id', function(d){
+            return 'bar-' + d.name.toLowerCase().replace(' ', '')
+        })
+        .attr('class', 'bar')
+        .style('fill', function(d){
 
+            if(d.contentType == 'status'){
+                    return '#5265AE'
+            } else if(d.contentType == 'house'){
+                    return '#5E843A';
+            } else if(d.contentType == 'death'){
+                    return '#CC2F27'
+            }
+        })
+        .on("mouseover", function(d){
 
-                        })
-                    .on("mouseover", function(d){
+            $('.got-button').removeClass('got-button-selected')
+            $(currentSelectionBtn).text(currentSelectionText)
+            currentSelectionText = ''
+            currentSelectionBtn = undefined;
+            showBarConnections(d);
+            console.log(d);
 
-                                $('.got-button').removeClass('got-button-selected')
-                                $(currentSelectionBtn).text(currentSelectionText)
-                                currentSelectionText = ''
-                                currentSelectionBtn = undefined;
-                                showBarConnections(d);
-                                console.log(d);
+        })
+        .on("mouseout", hideBarConnections);
 
-                        })
-                .on("mouseout", hideBarConnections)
+    bars.append('text')
+        .attr("class",'bar-label')
+        .attr("y", function(d,i){
+            var yPos = startY + ((barH + 1) * i) + 16
+            return yPos;
+        })
+        .attr("x", function(d,i){
+            if(align == 'right'){
+                    return w - barW(d.total) -35;
+            } else {
+                    return barW(d.total) +35;
+            }
+        })
+        .attr("text-anchor",function(d){
+            if(align == 'right'){
+                return 'end';
+            } else {
+                return 'start';
+            }
+        })
+        .text(function(d) {
+            var text = '';
 
-                        bars.append('text')
-                        .attr("class",'bar-label')
-                        .attr("y", function(d,i){
-                                var yPos = startY + ((barH + 1) * i) + 16
-                                return yPos;
-                        })
-                        .attr("x", function(d,i){
-                                        if(align == 'right'){
-                                                return w - barW(d.total) -35
-                                        } else {
-                                                return barW(d.total) +35
-                                        }
-                        })
-                        .attr("text-anchor",function(d){
-                                if(align == 'right'){
-                                        return 'end'
-                                } else {
-                                        return 'start'
-                                }
-
-                        })
-                        .text(function(d) {
-                                var text = '';
-
-                                if(d.contentType == 'house'){
-                                    if (d.name == 'Male') {
-                                    	text = 'Male';
-                                    } else {
-                                    	text = 'Female';
-                                    }
-                                } else if(d.contentType == 'death'){
-                                	text = d.name;
-                                }
-                                return text;
-
-                        });
-
-                        bars.append('text')
-                        .attr("class",'bar-label-pct')
-                        .attr("y", function(d,i){
-                                var yPos = startY + ((barH + 1) * i) + 16
-                                return yPos;
-                        })
-                        .attr("x", function(d,i){
-                                        if(align == 'right'){
-                                                return w
-                                        } else {
-                                                return startX
-                                        }
-                        })
-                        .attr("text-anchor",function(d){
-                                if(align == 'right'){
-                                        return 'end'
-                                } else {
-                                        return 'start'
-                                }
-
-                        })
-                        .text(function(d) {
-                                var text = Math.round(d.total/totalChars * 100).toFixed(0) + '%'
-                                return text;
-
-                        });
-
-                function barX (data, pos){
-                        var xPos = startX + barW(data[pos].total) + 5
-
-                        return xPos
+            if(d.contentType == 'house'){
+                if (d.name == 'Male') {
+                	text = 'Male';
+                } else {
+                	text = 'Female';
                 }
+            } else if(d.contentType == 'death'){
+            	text = d.name;
+            }
+            return text;
+        });
 
-                function barW(v){
-                        return v/totalChars * w;
+    bars.append('text')
+        .attr("class",'bar-label-pct')
+        .attr("y", function(d,i){
+            var yPos = startY + ((barH + 1) * i) + 16
+            return yPos;
+        })
+        .attr("x", function(d,i){
+            if(align == 'right'){
+                    return w
+            } else {
+                    return startX
+            }
+        })
+        .attr("text-anchor",function(d){
+            if(align == 'right'){
+                    return 'end'
+            } else {
+                    return 'start'
+            }
+        })
+        .text(function(d) {
+            var text = Math.round(d.total/totalChars * 100).toFixed(0) + '%'
+            return text;
+        });
 
-                }
+    function barX (data, pos){
+        var xPos = startX + barW(data[pos].total) + 5;
+        return xPos;
+    }
+
+    function barW(v){
+        return v/totalChars * w;
+    }
 }
 
 function color(val){
@@ -525,108 +534,98 @@ function drawChart(){
 	    .domain([0,maxCharAppear])
 	    .range([0,10]);
 
-
 	var nodes = cluster.nodes(map)
 
 	svg.selectAll(".node-dot")
-      .data(nodes.filter(function(n) { return n.depth == 2; }))
-    .enter().append("g")
-      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
-    .append("rect")
-	  .attr('class', function(d){
-		return 'node-dot ' + 'nodedot-' + d.className
-	})
-	  .attr('y', -5)
-      .attr('height', 12)
-      .attr('width', function(d){
-		if(d.nodeType == 'char'){
-			return gameBarScale(d.appear)
-		} else {
-			return barScale(d.appear)
-		}
-
-
-	})
-	// this is the bars (text excluded)
-	  .style('fill', function(d){
-		 	return getColor(d.nodeType, d.appear)
-   	   })
-	  .on("mouseover", showConnections)
-      .on("mouseout", hideConnections)
+	      .data(nodes.filter(function(n) { return n.depth == 2; }))
+	    .enter().append("g")
+	      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+	    .append("rect")
+		  .attr('class', function(d){
+			return 'node-dot ' + 'nodedot-' + d.className})
+		  .attr('y', -5)
+	      .attr('height', 12)
+	      .attr('width', function(d){
+			if(d.nodeType == 'char'){
+				return gameBarScale(d.appear)
+			} else {
+				return barScale(d.appear)
+			}})
+		  .style('fill', function(d){
+			 	return getColor(d.nodeType, d.appear)
+	   	   })
+		  .on("mouseover", showConnections)
+	      .on("mouseout", hideConnections);
 
 	svg.selectAll(".node")
-      .data(nodes.filter(function(n) { return n.depth == 2; }))
-    .enter().append("g")
-	  .attr("class", 'node')
-      .attr("transform", function(d) {
+	      .data(nodes.filter(function(n) { return n.depth == 2; }))
+	    .enter().append("g")
+		  .attr("class", 'node')
+	      .attr("transform", function(d) {
 
-		var translatevalue = d.y + 5
-		if(d.nodeType == 'char'){
-			translatevalue += gameBarScale(d.appear)
-		} else {
-			translatevalue += barScale(d.appear)
-		}
-
-		return "rotate(" + (d.x - 90) + ")translate(" + translatevalue + ")"; })
-
-    .append("text")
-      .attr("dx", function(d) { return d.x < 180 ? 0 : 0; })
-      .attr("dy", "5")
-      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
-      .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
-      .text(function(d) { return d.name; })
-      .attr("id", function(d){
-			return 'nodetext-' + d.className
-	   })
-	  .attr("class", function(d){
-			var bClass ="circle-text"
-
+			var translatevalue = d.y + 5
 			if(d.nodeType == 'char'){
-				bClass += ' btext-' + d.genderLink + ' btext-' + d.deathLink;
-			} else if(d.nodeType == 'house'){
-				bClass += ' btext-' + d.genderLink;
+				translatevalue += gameBarScale(d.appear)
 			} else {
-				bClass += ' btext-' + d.deathLink;
+				translatevalue += barScale(d.appear)
 			}
 
-			return bClass;
-      })
-	  .style('fill', function(d){
-	  			if(d.nodeType == 'char'){
-					return '#394B9F';
-				} else if(d.nodeType == 'house' ) {
-					return '#3C602E';
-				} else if( d.nodeType == 'hous'){
-					return '#CC2F27';
+			return "rotate(" + (d.x - 90) + ")translate(" + translatevalue + ")"; })
+
+	    .append("text")
+	      .attr("dx", function(d) { return d.x < 180 ? 0 : 0; })
+	      .attr("dy", "5")
+	      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+	      .attr("transform", function(d) { return d.x < 180 ? null : "rotate(180)"; })
+	      .text(function(d) { return d.name; })
+	      .attr("id", function(d){
+				return 'nodetext-' + d.className;
+		   })
+		  .attr("class", function(d){
+				var bClass ="circle-text"
+
+				if(d.nodeType == 'char'){
+					bClass += ' btext-' + d.genderLink + ' btext-' + d.deathLink;
+				} else if(d.nodeType == 'house'){
+					bClass += ' btext-' + d.genderLink;
+				} else {
+					bClass += ' btext-' + d.deathLink;
 				}
 
-	  	   })
-      .on("mouseover", showConnections)
-      .on("mouseout", hideConnections)
+				return bClass;
+	      })
+		  .style('fill', function(d){
+		  			if(d.nodeType == 'char'){
+						return '#394B9F';
+					} else if(d.nodeType == 'house' ) {
+						return '#3C602E';
+					} else if( d.nodeType == 'death'){
+						return '#CC2F27';
+					}
+		  	   })
+	      .on("mouseover", showConnections)
+	      .on("mouseout", hideConnections);
 
 	$('.node').mousemove(setPopupPosition);
 	$('.node-dot').mousemove(setPopupPosition);
 
-	gameWeaponsColor = d3.interpolateRgb("#ccc", '#2C3878');
+	charDeathColor = d3.interpolateRgb("#ccc", '#2C3878');
 
-
-	gameWeaponsScale = d3.scale.linear()
+	charDeathScale = d3.scale.linear()
 	    				.domain([0,maxCharDeath])
 	    				.range([0,1]);
 
+	charHouseColor = d3.interpolateRgb("#ccc", '#3C602E');
 
-	gameTopicsColor = d3.interpolateRgb("#ccc", '#3C602E');
-
-
-	gameTopicsScale = d3.scale.linear()
+	charHouseScale = d3.scale.linear()
 	    				.domain([0,maxCharHouses])
 	    				.range([0,1]);
 
-	var mergedLinks = chardeath_links.concat(charhouse_links)
+	var mergedLinks = chardeath_links.concat(charhouse_links);
 
 	svg.selectAll(".links")
 		.data(bundle(mergedLinks))
-	.enter().append("path")
+	  .enter().append("path")
 		.attr("class", function(d){
 			var linkClass = 'links link-' + d[4]['className'] + ' link-' + d[0]['className']
 			var node = (d[4]['nodeType'] == 'char')? d[4] : d[0];
@@ -638,7 +637,7 @@ function drawChart(){
 
 			linkClass += ' barlink-' + node['charStatus']
 
-			return linkClass
+			return linkClass;
 		})
 		.attr("id", function(d){
 			return 'link-' + d[4]['className'] + '-' + d[0]['className']
@@ -646,13 +645,15 @@ function drawChart(){
 		.attr("d", line)
 		.style("stroke", function(d){
 			var gradient;
-			if(d[4]['nodeType'] == 'hous' && d[0]['nodeType'] == 'char' ){
-				return 'url(#' + getGradient(d[4]['numChars'], d[0]['appear'], 'hous', 'char') +')'
+
+			if(d[4]['nodeType'] == 'death' && d[0]['nodeType'] == 'char' ){
+				return 'url(#' + getGradient(d[4]['numChars'], d[0]['appear'], 'death', 'char') +')'
+
 			} else if(d[4]['nodeType'] == 'house' && d[0]['nodeType'] == 'char'){
 				return 'url(#' + getGradient(d[4]['numChars'], d[0]['appear'], 'house', 'char') +')'
 			}
 
-			return'url(#' + gradient +')'
+			return 'url(#' + gradient +')';
 		});
 }
 
@@ -670,45 +671,42 @@ function getClassName(title){
 
 function setPopupPosition(e){
 	e = jQuery.event.fix(e);
-	mouseX = e.pageX //- $('#gia-interactive').offset().left
-	mouseY = e.pageY
-
+	mouseX = e.pageX;
+	mouseY = e.pageY;
 
 	if(mouseY < $('#got-network').offset().top + $('#got-network').outerHeight()/2){
 		//bottom
-		mouseY -= $('#node-info').outerHeight() + 10
+		mouseY -= $('#node-info').outerHeight() + 10;
 	} else {
 		//top
-		 mouseY += 10
+		 mouseY += 10;
 	}
-
 
 	if(mouseX < $('#got-network').offset().left + $('#got-network').outerWidth()/2 ){
 		//left side
-		mouseX -= $('#node-info').outerWidth() + 10
+		mouseX -= $('#node-info').outerWidth() + 10;
 
 		if(mouseX  < 0){
-			mouseX = 10
+			mouseX = 10;
 		}
 
 	} else {
 		//right side
-		mouseX += 10
+		mouseX += 10;
 
 		if(mouseX + $("#node-info").outerWidth() > $(window).width() - 20){
-			mouseX = $(window).width() - 10 - $("#node-info").outerWidth()
+			mouseX = $(window).width() - 10 - $("#node-info").outerWidth();
 		}
 	}
 
 	if(e.pageY + $('#node-info').outerHeight() + 20 > $(document).height() ){
-		mouseY = e.pageY - 20 - $('#node-info').outerHeight()
+		mouseY = e.pageY - 20 - $('#node-info').outerHeight();
 	}
 
 	$('.got-popup').css({
 		top: mouseY,
 		left: mouseX
 	})
-
 }
 
 var currentSelection = undefined;
@@ -738,7 +736,6 @@ function showBarConnections(d) {
 			} else if(d.contentType == 'death'){
 				return '#CC2F27';
 			}
-
 		})
 
 	svg.selectAll('.circle-text')
@@ -774,8 +771,7 @@ function showBarConnections(d) {
 	}
 
 	svg.selectAll('.node-dot')
-		.style('opacity', .01)
-
+		.style('opacity', .01);
 
 	d.data.forEach(function(game){
 		svg.select('#nodetext-' + game.className)
@@ -805,8 +801,6 @@ function showBarConnections(d) {
 
 					svg.select('.barlink-' + game.className + node['className'])
 						.style("stroke-opacity", 1)
-
-					console.log(game.className);
 				})
 			}  else {
 
@@ -857,7 +851,7 @@ function hideBarConnections(d) {
 
 	currentSelection = undefined;
 	currentSelectionBar = undefined;
-	currentSelection = ''
+	currentSelection = '';
 }
 
 function showConnections(d) {
@@ -925,7 +919,7 @@ function showConnections(d) {
 			color: getColor(d.nodeType, d.appear),
 			count: d.numChars
 		}).appendTo( "#node-info" );
-	} else if( d.nodeType == 'hous'){
+	} else if( d.nodeType == 'death'){
 		$("#deathTemplate").tmpl( {
 			//name: (d.name.toLowerCase().search('use') >= 0)? 'the ' + d.name.toLowerCase() : d.name.toLowerCase(),
 			name: (d.name.toLowerCase() == 'other')? 'wild board attack, throat slit or burned ' : d.name.toLowerCase(),
@@ -933,7 +927,7 @@ function showConnections(d) {
 			count: (d.numChars > 1) ? d.numChars	+ ' major characters are': d.numChars	+ ' major character is'
 		}).appendTo( "#node-info" );
 	}
-	$("#node-info").show()
+	$("#node-info").show();
 }
 
 function hideConnections(d) {
@@ -953,21 +947,20 @@ function hideConnections(d) {
 	}
 }
 
-function getGradient(startValue, endValue, topic1, topic2){
+function getGradient(startValue, endValue, node1, node2){
 
 	var gradientId = "gradient" + gradientCounter;
 
 	var gradient = svgDefs.append("svg:linearGradient")
-		.attr("id", gradientId)
-		//.attr("spreadMethod", "pad");
+		.attr("id", gradientId);
 
 	gradient.append("svg:stop")
 	    .attr("offset", "10%")
-	    .attr("stop-color", getColor( topic1,startValue))
+	    .attr("stop-color", getColor( node1,startValue))
 
 	gradient.append("svg:stop")
 	    .attr("offset", "90%")
-	    .attr("stop-color", getColor(topic2, endValue))
+	    .attr("stop-color", getColor(node2, endValue))
 
 	gradientCounter++;
 
@@ -1009,7 +1002,7 @@ function getColor(type, value){
 		} else if( value > 15 ){
 			color = '#2F4F2F';
 		}
-	} else if(type == 'hous'){
+	} else if(type == 'death'){
 		if( value <= 1){
 			color = '#E88B78';
 		} else if( value == 2){

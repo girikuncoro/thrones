@@ -1,3 +1,11 @@
+body {
+	line-height: 1;
+	font-family: Arial, sans-serif;
+	margin: 0;
+	text-rendering: optimizeLegibility;
+	background-color: #F3F2F2;
+}
+
 h1 {
 	font-size: 28px;
 }
@@ -8,13 +16,14 @@ p {
 	color: #666;
 }
 
-
-body {
-	line-height: 1;
-	font-family: Arial, sans-serif;
-	margin: 0;
-	text-rendering: optimizeLegibility;
-	background-color: #F3F2F2;
+img {
+	display: block;
+	max-width: 500px;
+	max-height: 95px;
+	width: auto;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
 }
 
 /* all single-instance buttons get the .got-button class */
@@ -98,11 +107,7 @@ body {
 	cursor: pointer;
 }
 
-.game-weapon-link {
-	stroke-width: 1px;
-	fill: none;
-}
-.game-topic-link {
+.char-death-link {
 	stroke-width: 1px;
 	fill: none;
 }
@@ -116,7 +121,6 @@ body {
 	font-weight: bold;
 	opacity: 1;
 }
-
 
 .circle-text {
 	font-size: 11px;
@@ -222,52 +226,6 @@ body {
   display: none;
 }
 
-#game-feedback {
-	margin-bottom: 40px;
-}
-
-#game-feedback h1{
-	border-top: 1px solid #ccc;
-	text-align: center;
-	margin-top: 50px;
-	padding-top: 20px;
-}
-
-
-.user-grid {
-	width: 300px;
-	height: 300px;
-}
-
-[class*="user-grid-group-"] {
-	float: left;
-	height: 149px;
-	width: 149px;
-}
-
-.user-grid-group-1, .user-grid-group-2 {
-	border-bottom: 2px solid #000;
-}
-.user-grid-group-1, .user-grid-group-3 {
-	border-right: 2px solid #000;
-}
-
-
-[class*="user-grid-block-"] {
-	float: left;
-	width: 74px;
-	height: 74px;
-	background-color: #ccc;
-}
-
-.user-grid-block-1, .user-grid-block-2 {
-	border-bottom: 1px solid #fff;
-}
-
-.user-grid-block-1, .user-grid-block-3 {
-	border-right: 1px solid #fff;
-}
-
 .option-text {
 	font-family: Georgia;
 	font-size: 16px;
@@ -344,14 +302,4 @@ body {
 .chart-detail p {
 	font-size: 11px;
 	line-height: 12px;
-}
-
-img {
-	display: block;
-	max-width: 500px;
-	max-height: 95px;
-	width: auto;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 10px;
 }
