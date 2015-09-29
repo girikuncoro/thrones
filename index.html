@@ -19,57 +19,57 @@
 		ga('create', 'UA-43046283-2', 'auto');
 		ga('send', 'pageview');
 	</script>
-	<script id="got-canvas" type="text/x-jquery-tmpl">
 
+	<script id="charTemplate" type="text/x-jquery-tmpl">
 		<div id='node-name'>${name}</div>
 
-		<div class='node-topic' id='node-image-references'>
+		<div class='node-char' id='node-image-references'>
 			<img src="${imagesrc}" alt="thrones" width="100" height="100">
 		</div>
-		<div class='node-topic' id='node-game-sales'>
+		<div class='node-char' id='node-char-appearance'>
 			<div class='node-label'>Status</div>
 			<div class='node-data-color' style='background-color: ${color};'></div>
-			<div class='node-data-short'>${rating}</div>
+			<div class='node-data-short'>${status}</div>
 		</div>
-		<div class='node-topic' id='node-topic-references'>
+		<div class='node-char' id='node-death-references'>
 			<div class='node-label'>Death</div>
 			<div class='node-data'></div>
 		</div>
-		<div class='node-topic' id='node-episode-references'>
+		<div class='node-char' id='node-episode-references'>
 			<div class='node-label'>Appearance</div>
 			<div class='node-data'>${episodes} episodes</div>
 		</div>
-		<div class='node-topic' id='node-season-references'>
+		<div class='node-char' id='node-season-references'>
 			<div class='node-label'>Season(s)</div>
 			<div class='node-data'></div>
 		</div>
-		<div class='node-topic' id='node-weapon-references'>
+		<div class='node-char' id='node-house-references'>
 			<div class='node-label'>House</div>
 			<div class='node-data'></div>
 		</div>
-		<div class='node-topic' id='node-culture'>
+		<div class='node-char' id='node-culture'>
 			<div class='node-label'>Culture</div>
 			<div class='node-data'>${culture}</div>
 		</div>
-		<div class='node-topic' id='node-religion'>
+		<div class='node-char' id='node-religion'>
 			<div class='node-label'>Religion</div>
 			<div class='node-data'>${religion}</div>
 		</div>
-		<div class='node-topic' id='node-portrayed'>
+		<div class='node-char' id='node-portrayed'>
 			<div class='node-label'>Portrayed</div>
 			<div class='node-data'>${portrayed}</div>
 		</div>
 	</script>
 
 	<script id="deathTemplate" type="text/x-jquery-tmpl">
-		<div class='node-topic-tags' id='node-tags'>
+		<div class='node-char-tags' id='node-tags'>
 			<div class='node-data-color' style='background-color: ${color};'></div>
 			<div class='node-data-wide'>${count} killed by ${name}</div>
 		</div>
 	</script>
 
 	<script id="allegianceTemplate" type="text/x-jquery-tmpl">
-		<div class='node-topic-tags' id='node-tags'>
+		<div class='node-char-tags' id='node-tags'>
 			<div class='node-data-color' style='background-color: ${color};'></div>
 			<div class='node-data-wide'>${count} characters are in allegiance with ${name}</div>
 		</div>
@@ -78,10 +78,6 @@
 	<script id="listTemplate" type="text/x-jquery-tmpl">
 		<div class='node-list-item'>${item}</div>
 	</script>
-
-	<style>
-		body {background-color: #F3F2F2}
-	</style>
 </head>
 <body>
 
@@ -111,20 +107,20 @@
 			</svg></p>
 		</div>
 		<div id='anchored-charts'>
-			<div class='anchored-chart' id='chart-violence'>
+			<div class='anchored-chart' id='chart-death'>
 				<div class='option-text' font-family="Arial">Death Toll</div>
 
 				<p class='detail-text' >According to online polls, the most important death scene is the Red Wedding, which saw the deaths of Robb Stark (King of the North and Our Hearts), his mother Catelyn Stark, and his pregnant wife, Talisa. Oh, and his direwolf, Grey Wind.</p>
-				<div class='callout-chart' id='chart-game-violence'></div>
-				<div class='got-button' id='btn-violence'>Show Deceased</div>
+				<div class='callout-chart' id='chart-char-death'></div>
+				<div class='got-button' id='btn-death'>Show Deceased</div>
 			</div>
 
-			<div class='anchored-chart' id='chart-game-guns'>
+			<div class='anchored-chart' id='chart-house'>
 				<div class='option-text'>Allegiances by Gender</div>
 
 				<p class='detail-text' >Game of Thrones is groundbreaking in its cast of both strong male and female characters. Emilia Clarke's Daenerys has become so popular, 146 baby girls were named Khaleesi in 2013!</p>
-				<div class='callout-chart' id='chart-game-weapons'></div>
-				<div class='got-button' id='btn-guns'>Show Male Characters</div>
+				<div class='callout-chart' id='chart-char-gender'></div>
+				<div class='got-button' id='btn-gender'>Show Male Characters</div>
 			</div>
 
 			<div class='chart-detail' style='left: 200px; top: 75px; width: 120px; text-align: left;'>
@@ -182,6 +178,7 @@
 </div>
 
 <div id='node-info' class='got-popup'></div>
-	<script src="js/main.js"></script>
+
+<script src="js/main.js"></script>
 </body>
 </html>

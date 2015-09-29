@@ -14,6 +14,7 @@ body {
 	font-family: Arial, sans-serif;
 	margin: 0;
 	text-rendering: optimizeLegibility;
+	background-color: #F3F2F2;
 }
 
 /* all single-instance buttons get the .got-button class */
@@ -123,7 +124,6 @@ body {
 	cursor: pointer;
 }
 
-
 .highlight {
 	font-weight: bold;
 }
@@ -143,14 +143,14 @@ body {
 	width: 175px;
 }
 
-.node-topic {
+.node-char {
 	float: left;
 	width: 100%;
 	padding: 3px 0;
 	border-top: 1px solid #ccc;
 }
 
-.node-topic-tags {
+.node-char-tags {
 	float: left;
 	width: 100%;
 	padding: 3px 0;
@@ -201,7 +201,6 @@ body {
 	text-transform: lowercase;
 
 }
-
 
 .node-list-item {
 	width: 100%;
@@ -317,13 +316,6 @@ body {
 	fill: #ccc;
 }
 
-
-#circle-chart-container {
-	position: relative;
-	background: url(../img/annotations.png) no-repeat 5px -70px;
-}
-
-
 #anchored-charts {
 	padding-top: 100px;
 	width: 200px;
@@ -335,20 +327,14 @@ body {
 	margin-bottom: 50px;
 }
 
-#chart-game-guns {
-	float: left;
-	width: 180px;
-}
-
 #chart-game-audience {
 	float: left;
 }
 
-#chart-violence {
+#chart-house {
 	width: 180px;
 	float: left;
 }
-
 
 .chart-detail {
 	position: absolute;
@@ -358,26 +344,6 @@ body {
 .chart-detail p {
 	font-size: 11px;
 	line-height: 12px;
-}
-
-
-
-#intro-video {
-	width: 460px;
-	float: left;
-	height: 258px;
-	margin-left: 90px;
-}
-
-#intro-text {
-	margin-right: 20px;
-	margin-left: 20px;
-	width: 300px;
-	float: left;
-}
-#intro-text p {
-	text-align: left;
-
 }
 
 img {
