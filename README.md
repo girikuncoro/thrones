@@ -1,6 +1,6 @@
-# Visualizing Game of Thrones
-###View our live visualization here: http://thronesviz.github.io
-##Data Collection
+# Visualizing Game of Thrones  
+### View our live visualization here: http://thronesviz.github.io  
+## Data Collection  
 Game of Thrones (GoT) is an American fantasy drama television series that is very popular
 nowadays. Using the BeautifulSoup package, a library to pull data out from HTML files, we
 wrote Python script to collect the major characters of GoT data from its wikia web pages into a
@@ -9,7 +9,7 @@ quite important in the story. The data includes the character name, allegiance, 
 status (death is one of the most important events in GoT), causes of death, number of
 appearance, origin, religion, culture and portrayal.
 
-##Data Cleaning
+## Data Cleaning  
 We then added the gender, link to their profile image and manually cleaned the raw data as
 below:
 *Removed the comma separated number for season data
@@ -21,7 +21,7 @@ visualization will be great, but not all characters are provided with this data 
 thought putting the killer of the characters will be interesting, but we decided not to since it will
 make the edges line more complicated among characters.
 
-##Static Features
+## Static Features  
 Inspired by the Gun Control chord diagram and used their code snippet as the base of our
 visualization, we mapped the data from the wikia to visual elements in three main ways:
 color/color gradient, relationship paths, and scaled tick marks (bars). In our main circle graph,
@@ -41,7 +41,7 @@ of key characters in Game of Thrones) are more prominent than paths from House T
 minor house that one character is originally from but is not important to the story) because of the
 darker color associated with houses that have a higher number of allegiances.
 
-##Dynamic Features
+## Dynamic Features  
 By hovering over a house or cause of death, you can see the exact number of characters
 associated with that house/cause of death. You will also see all paths that connect characters to
 that house/cause of death (all other paths will disappear). Similarly, if you hover over a
@@ -57,7 +57,7 @@ marks at once). You can also click the button under the graph to show all deceas
 second widget is the same as the first but shows male/female characters and highlights
 male/female characters with their house allegiances.
 
-##The Story
+## The Story  
 Our data is from the Game of Thrones wikia, which is based off of the television series on HBO
 (not the books), and is updated to where the series is in real time. (So a character who maybe
 eventually dies in the books but is still alive thus far in the television series will have a status of
